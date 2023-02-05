@@ -45,7 +45,7 @@ for t in range(numTimes):
 
 #:length of x axis
 startPosition =0
-endPosition = 0.06
+endPosition = 1
 
 #Time between frames ms
 frameInterval = 40
