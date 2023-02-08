@@ -45,7 +45,7 @@ for t in range(numTimes):
 
 #:length of x axis
 startPosition =0
-endPosition = 1.3
+endPosition = 2
 
 #Time between frames ms
 frameInterval = 40
@@ -64,7 +64,7 @@ DenFrame = axDen.text(0,520, "")
 
 #plot temperature on same graph
 axT=axDen.twinx()
-axT.set_ylim(0, 20)
+axT.set_ylim(0, 50)
 axT.set_ylabel("Ion Temperature (keV)",color="red")
 lineT, = axT.plot([],[],color="red")
 
