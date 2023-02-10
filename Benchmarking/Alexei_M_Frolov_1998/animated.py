@@ -64,7 +64,7 @@ DenFrame = axDen.text(0,520, "")
 
 #plot temperature on same graph
 axT=axDen.twinx()
-axT.set_ylim(0, 50)
+axT.set_ylim(0, 150)
 axT.set_ylabel("Ion Temperature (keV)",color="red")
 lineT, = axT.plot([],[],color="red")
 
