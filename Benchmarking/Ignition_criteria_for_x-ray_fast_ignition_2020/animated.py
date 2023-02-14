@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-hyades_file = 'data/test_10_19.cdf'
+hyades_file = 'data/radTransportOn/test_10_19.cdf'
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 
