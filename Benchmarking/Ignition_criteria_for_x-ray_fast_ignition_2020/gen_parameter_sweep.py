@@ -98,14 +98,20 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
         f.writelines("hyades -c "+PATH+n+"\n")
     #Commands for converting to cdf file
     for n in filenames:
-        f.writelines("ppf2ncdf "+PATH+n+"\n")
+        f.writelines("ppf2ncdf "+PATH+n[0:-3]+".ppf\n")
     f.close()
-filenames = get_filenames(50, 50)
+    
+    
+filePATH = "scripts/radTransportOn/"
+no_tempSweeps = 1
+no_radiusSweeps = 10
 
-#init_files(filenames, original_f)
+filenames = get_filenames(no_tempSweeps, no_radiusSweeps, PATH = filePATH)
 
-#T_sweep(filenames, 1, 50, n_Temps=10, n_radius=10)
-#r_sweep_radius(filenames, init_r = 0.0001, final_r=0.007,n_Temps=10, n_radius=10)
+init_files(filenames, original_f,PATH = filePATH)
+
+#T_sweep(filenames, 10, 10, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_radius(filenames, init_r = 0.005, final_r=0.006, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
 
 gen_scarf_batch_file(filenames)
-gen_cdf_list(filenames, PATH="data/basic_test_data/")
+gen_cdf_list(filenames, PATH = "data/radTransportOn/sweep/")

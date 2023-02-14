@@ -30,6 +30,7 @@ def main(inputFileName):
         Hs_Tion.append(get_Hs_Tion(f))
         TNproduced.append(get_energy_produced(f))
     
+    print(TNproduced)
     gen_rhoR_T_graph(rhoR, Hs_Tion, TNproduced)
    
 #generates a graph in rhoR, T space of the energy produced
@@ -39,10 +40,10 @@ def gen_rhoR_T_graph(x, y, z):
     df.columns = ['X_value','Y_value','Z_value']
     pivotted= df.pivot('Y_value','X_value','Z_value')
     
-    pivotted = pivotted.sort_values(1,ascending=False)    
+    #pivotted = pivotted.sort_values(1,ascending=False)    
 
-    ax = sns.heatmap(pivotted,cmap='RdBu_r')
-    ax.set_xticks(range(0,50,2),np.around((df['X_value'].tolist()[0:50])[0::2],3))
+    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0, vmax=8*10**17)
+    #ax.set_xticks(range(0,50,2),np.around((df['X_value'].tolist()[0:50])[0::2],3))
     
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])

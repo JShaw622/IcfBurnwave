@@ -1,1 +1,0 @@
-#### This folder includes folders for each parameter sweep performed as a large number of input decks are required for each.
