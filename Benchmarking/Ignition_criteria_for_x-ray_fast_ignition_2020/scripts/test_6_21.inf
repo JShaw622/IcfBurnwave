@@ -1,0 +1,61 @@
+test_6_21
+c
+geometry 3
+c
+c Define hotspot (Hs) of DT
+c
+DEFINE HsRad 0.00434
+DEFINE DoubleHsRad 0.1
+DEFINE HsEndZone 10
+DEFINE TotZone 50
+DEFINE TotRad 0.5
+DEFINE HsTemp 7.0
+DEFINE HsDensity 100
+c
+c Setting up zones
+c
+MESH 1 HsEndZone+1 0 HsRad
+MESH HsEndZone+1 HsEndZone+11 HsRad DoubleHsRad 
+MESH HsEndZone+11 TotZone DoubleHsRad TotRad
+c
+c Define hotspot region
+c
+REGION 1 HsEndZone 1 HsDensity HsTemp
+MATERIAL 1 1. 2. 1
+MATERIAL 1 1. 3. 1
+c
+c Define Cold fuel (Cf) @ T= 200 eV
+c
+DEFINE CfTemp 200e-3
+c
+REGION HsEndZone+1 TotZone 2 HsDensity CfTemp
+MATERIAL 2 1. 2. 1
+MATERIAL 2 1. 3. 1
+c
+c Use DT eos for Hs and Cf
+c Use Thomas-Fermi ionization model for all regions
+EOS 11 1 2
+IONIZ 1 3
+IONIZ 2 3
+c 
+c Extrapolate EOS linearly for high temperatures
+c
+EOSXTRP 1 2 2 2 2
+EOSXTRP 2 2 2 2 2
+c
+c Turn on Thermonuclear burn in fuel regions
+c
+TNBURN 1 2
+c parm lbcpels t
+c parm BNUESCM 1
+c
+c Including ppf file output 
+c
+PPARRAY r rcm rho ti BPEPRD
+PARM postdt .5e-10
+c
+PARM DTMIN 1.e-30
+PARM tstop 8.e-10
+PARM itmcyc 10
+PARM NSTOP 90000
+c
