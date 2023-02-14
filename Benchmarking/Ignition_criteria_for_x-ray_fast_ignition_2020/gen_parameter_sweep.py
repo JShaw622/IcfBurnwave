@@ -100,12 +100,12 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     for n in filenames:
         f.writelines("ppf2ncdf "+PATH+n+"\n")
     f.close()
-filenames = get_filenames(50, 50)
+filenames = get_filenames(10, 10)
 
 init_files(filenames, original_f)
 
-T_sweep(filenames, 1, 50, n_Temps=50, n_radius=50)
-r_sweep_radius(filenames, init_r = 0.0001, final_r=0.01,n_Temps=50, n_radius=50)
+T_sweep(filenames, 1, 50, n_Temps=10, n_radius=10)
+r_sweep_radius(filenames, init_r = 0.0001, final_r=0.007,n_Temps=10, n_radius=10)
 
 gen_scarf_batch_file(filenames)
 gen_cdf_list(filenames)

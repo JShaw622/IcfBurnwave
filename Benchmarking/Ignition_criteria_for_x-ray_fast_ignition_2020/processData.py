@@ -32,7 +32,7 @@ def main(inputFileName):
 #generates a graph in rhoR, T space of the energy produced
 def gen_rhoR_T_graph(x, y, z):
     fig =plt.figure()
-    plt.scatter(x,y, linewidths=1, alpha=.7,edgecolor='k',s=200,c=z)
+    plt.scatter(x,y, linewidths=1, alpha=.7,edgecolor='k',s=20,c=z)
     plt.show
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
