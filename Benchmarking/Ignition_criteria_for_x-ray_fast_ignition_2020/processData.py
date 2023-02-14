@@ -7,6 +7,9 @@ Created on Mon Feb 13 14:48:02 2023
 
 import sys
 from netCDF4 import Dataset
+import pandas as pd
+import seaborn as sns
+from pylab import *
 import matplotlib.pyplot as plt
 
 def main(inputFileName):
@@ -31,13 +34,25 @@ def main(inputFileName):
    
 #generates a graph in rhoR, T space of the energy produced
 def gen_rhoR_T_graph(x, y, z):
-    fig =plt.figure()
-    plt.scatter(x,y, linewidths=1, alpha=.7,edgecolor='k',s=20,c=z)
+    #Puts data into a pandas dataframe for seaborn plotting as a heatmap
+    df = pd.DataFrame.from_dict(np.array([x,y,z]).T)
+    df.columns = ['X_value','Y_value','Z_value']
+    pivotted= df.pivot('Y_value','X_value','Z_value')
+    
+    pivotted = pivotted.sort_values(1,ascending=False)    
+
+    ax = sns.heatmap(pivotted,cmap='RdBu_r')
+    ax.set_xticks(range(0,50,2),np.around((df['X_value'].tolist()[0:50])[0::2],3))
+    
+    
+    #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
+    plt.xlabel("RhoR (g/cm^2)")
+    plt.ylabel("T (KeV)")
     plt.show
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
 def get_energy_produced(filename):
-    print("Getting energy produced from: " + filename)
+    #print("Getting energy produced from: " + filename)
     f = Dataset(filename,mode='r')
     
     #Array of dump times i.e. times at which data is put into the ppf/cdf file
@@ -53,7 +68,7 @@ def get_energy_produced(filename):
 #The density is assumed to be constant initially
 #returns hotspot rhoR
 def get_Hs_rhoR(filename):
-    print("Getting Hotspot temperature from: " + filename)
+    #print("Getting Hotspot temperature from: " + filename)
     f = Dataset(filename,mode='r')
     
     HsEndZone = 0
@@ -77,7 +92,7 @@ def get_Hs_rhoR(filename):
 
 #Reads a file and returns the temperature of the 1st zone at the begining of the problem
 def get_Hs_Tion(filename):
-    print("Getting Hotspot temperature from: " + filename)
+    #print("Getting Hotspot temperature from: " + filename)
     f = Dataset(filename,mode='r')
     
     #zone ion temperature in keV
