@@ -10,7 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-hyades_file = 'data/radTransportOn/test_10_19.cdf'
+PATH = "data/radTransportOn/"
+hyades_file = PATH+'test.cdf'
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 
@@ -89,7 +90,7 @@ def animateDen(i):
 
 animDen = FuncAnimation(figDen, animateDen, init_func=init,
                                 frames=endFrame-startFrame, interval=frameInterval, blit=True)
-animDen.save('density.gif', writer='imagemagick')
+animDen.save(PATH+'density.gif', writer='imagemagick')
 print("Density finished")
 
 # figFlow = plt.figure()
@@ -145,7 +146,7 @@ def animateTN(i):
 
 animTN = FuncAnimation(figTN, animateTN, init_func=initTN,
                                 frames=endFrame-startFrame, interval=frameInterval, blit=True)
-animTN.save('TN.gif', writer='imagemagick')
+animTN.save(PATH+'TN.gif', writer='imagemagick')
 print("Energy Producion finished")
 
 print("End Time: ",dumpTime[endFrame-1])
