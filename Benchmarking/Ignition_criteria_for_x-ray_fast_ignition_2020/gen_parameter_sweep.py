@@ -85,20 +85,19 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f = (open("batchfiles/runScripts.sh", "w", newline="\n"))
     
     #Parameters 
-    f.writelines(
-"""#!/bin/bash
-#SBATCH --job-name=Hyburn
-#SBATCH -p scarf
-#SBATCH --output=hyades_output.txt
-#SBATCH --ntasks=200
-#SBATCH --cpus-per-task=1
-#SBATCH --time=23:59:59\n""")
+    f.writelines("#!/bin/bash\n")
+    f.writelines("#SBATCH --job-name=Hyburn\n")
+    f.writelines("#SBATCH -p scarf\n")
+    f.writelines("#SBATCH --output=hyades_output.txt")
+    f.writelines("#SBATCH --ntasks=20\n")
+    f.writelines("#SBATCH --cpus-per-task=1\n")
+    f.writelines("#SBATCH --time=23:59:59\n")
 #Commands for runing scripts
     for n in filenames:
         f.writelines("hyades -c "+PATH+n+"\n")
     #Commands for converting to cdf file
     for n in filenames:
-        f.writelines("ppf2ncdf "+PATH+n[0:-3]+".ppf\n")
+        f.writelines("ppf2ncdf "+PATH+n[0:-3]+"ppf\n")
     f.close()
     
     
@@ -111,7 +110,7 @@ filenames = get_filenames(no_tempSweeps, no_radiusSweeps, PATH = filePATH)
 init_files(filenames, original_f,PATH = filePATH)
 
 #T_sweep(filenames, 10, 10, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
-r_sweep_radius(filenames, init_r = 0.005, final_r=0.006, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_radius(filenames, init_r = 0.005, final_r=0.007, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
 
 gen_scarf_batch_file(filenames)
 gen_cdf_list(filenames, PATH = "data/radTransportOn/sweep/")
