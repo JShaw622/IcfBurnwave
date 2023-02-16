@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = "data/radTransportOn/"
-hyades_file = PATH+'test.cdf'
+PATH = "data/radTransportOn/sweep/"
+hyades_file = PATH+'test_0_9.cdf'
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 

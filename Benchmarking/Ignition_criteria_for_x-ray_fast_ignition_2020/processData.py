@@ -42,7 +42,7 @@ def gen_rhoR_T_graph(x, y, z):
     
     #pivotted = pivotted.sort_values(1,ascending=False)    
     
-    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0, vmax=8*10**17,cbar_kws={'label': 'TN energy produced (erg)'})
+    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label': 'TN energy produced (erg)'})
     ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
     
     
@@ -85,7 +85,7 @@ def get_Hs_rhoR(filename):
         
     density = f.variables["Rho"][0][HsEndZone]
     radius = f.variables["R"][0][HsEndZone+1] #Radius of the end of the hotspot i.e. mesh position at hs end
-    
+
     rhoR = density*radius
     f.close()
     return rhoR
