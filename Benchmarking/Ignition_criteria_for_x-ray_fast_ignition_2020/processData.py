@@ -49,6 +49,7 @@ def gen_rhoR_T_graph(x, y, z):
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel("\u03C1r ($gcm^{-2}$)")
     plt.ylabel("T (KeV)")
+    plt.title("FLXLRM 0.65")
     plt.show
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value

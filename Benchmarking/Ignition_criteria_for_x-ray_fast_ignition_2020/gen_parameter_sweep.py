@@ -101,7 +101,7 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f.close()
     
     
-filePATH = "scripts/radTransportOn/"
+filePATH = "scripts/radTransportOn/FLXLRM100/"
 no_tempSweeps = 1
 no_radiusSweeps = 10
 
@@ -113,4 +113,4 @@ init_files(filenames, original_f,PATH = filePATH)
 r_sweep_radius(filenames, init_r = 0.005, final_r=0.007, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
 
 gen_scarf_batch_file(filenames)
-gen_cdf_list(filenames, PATH = "data/radTransportOn/sweep/")
+gen_cdf_list(filenames, PATH = "data/radTransportOn/sweep_FLXLRM100/")
