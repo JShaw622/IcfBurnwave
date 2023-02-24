@@ -40,16 +40,16 @@ def gen_rhoR_T_graph(x, y, z):
     df.columns = ['X_value','Y_value','Z_value']
     pivotted= df.pivot('Y_value','X_value','Z_value')
     
-    #pivotted = pivotted.sort_values(1,ascending=False)    
+    pivotted = pivotted.sort_values("Y_value",ascending=False)    
     
     ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label': 'TN energy produced (erg)'})
-    ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
+    ax.set_xticks(range(0,30,2),np.around((df['X_value'].tolist()[0:30:2]),3))
     
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel("\u03C1r ($gcm^{-2}$)")
     plt.ylabel("T (KeV)")
-    plt.title("FLXLRM 0.65")
+    plt.title("FLXLRM 1.00")
     plt.show
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value

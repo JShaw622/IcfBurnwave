@@ -43,7 +43,7 @@ def T_sweep(names, init_T = 1, final_T = 1, n_Temps=10, n_radius=10, PATH="scrip
     for i in range(0, len(names), n_radius):
         for j in range(n_radius):
             o_f = open(PATH+names[c], "r").readlines()
-            print("Temp sweep file: " +PATH+ names[c])
+            print("T sweep file: " +PATH+ names[c])
             f = open(str(PATH)+str(names[c]), "w")
             o_f[11] = "DEFINE HsTemp "+str(round(T,2))+"\n"
             f.writelines(o_f)
@@ -88,7 +88,7 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f.writelines("#!/bin/bash\n")
     f.writelines("#SBATCH --job-name=Hyburn\n")
     f.writelines("#SBATCH -p scarf\n")
-    f.writelines("#SBATCH --output=hyades_output.txt")
+    f.writelines("#SBATCH --output=hyades_output.txt\n")
     f.writelines("#SBATCH --ntasks=20\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=23:59:59\n")
@@ -101,16 +101,16 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f.close()
     
     
-filePATH = "scripts/radTransportOn/FLXLRM100/"
-no_tempSweeps = 1
-no_radiusSweeps = 10
+filePATH = "scripts/radTransportOn/fluxLimit/"
+no_tempSweeps = 5
+no_radiusSweeps = 20
 
 filenames = get_filenames(no_tempSweeps, no_radiusSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-#T_sweep(filenames, 10, 10, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
-r_sweep_radius(filenames, init_r = 0.005, final_r=0.007, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
+T_sweep(filenames, 5, 20, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_radius(filenames, init_r = 0.003, final_r=0.006, n_Temps=no_tempSweeps, n_radius=no_radiusSweeps,PATH = filePATH)
 
 gen_scarf_batch_file(filenames)
-gen_cdf_list(filenames, PATH = "data/radTransportOn/sweep_FLXLRM100/")
+gen_cdf_list(filenames, PATH = "data/radTransportOn/fluxLimit/")
