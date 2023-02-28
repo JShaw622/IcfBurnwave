@@ -4,14 +4,14 @@ Created on Mon Feb 13 13:04:55 2023
 
 @author: Jack Shaw
 
-NOTE: Improvement can be made by having separate PATH and filenames
+NOTE: Improvement can potentially be made by having separate PATH and filenames
 """
 
-original_f = "test.inf"
+original_f = "baseInput.inf"
 #print(original_f.read())
 
 
-def get_filenames(n_temp=10, n_radius=10, PATH="scripts/"):
+def get_filenames(n_temp=10, n_radius=10, PATH="data/"):
     f = []
     filenames =[]
     #this will create the files if needed
@@ -50,14 +50,14 @@ def T_sweep(names, init_T = 1, final_T = 1, n_Temps=10, n_radius=10, PATH="scrip
             f.close()
             c+=1
         T+=T_increment
+        
 #sweeps through radius between init_r and final_r
 def r_sweep_radius(names, init_r = 0.001, final_r=0.01,n_Temps=10, n_radius=10,PATH="scripts/"):
     steps = n_radius-1
     r = init_r
     r_increment =(final_r-init_r)/steps
-
-    
     i=0
+    
     for n in names:
         if i >=n_radius:
             r=init_r
@@ -88,7 +88,7 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f.writelines("#!/bin/bash\n")
     f.writelines("#SBATCH --job-name=Hyburn\n")
     f.writelines("#SBATCH -p scarf\n")
-    f.writelines("#SBATCH --output=hyades_output.txt")
+    f.writelines("#SBATCH --output=hyades_output.txt\n")
     f.writelines("#SBATCH --ntasks=20\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=23:59:59\n")
