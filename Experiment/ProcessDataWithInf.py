@@ -35,7 +35,11 @@ def main(inputFileName):
         TNproduced.append(get_energy_produced(f))
         
         #print(Hs_rhoR[i-1], Bar_rhoR[i-1])
-    gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduced, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
+        
+    
+    graphTitle = "@ T=10 KeV, \u03C1=100 $gcm^{-2}$"
+    
+    gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduced, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)", Title=graphTitle)
 
 
 #reads inf file to find barrier radius and density    
@@ -88,7 +92,7 @@ def get_HS_rhoR(filename):
 
 
 #generates a graph in rhoR, T space of the energy produced
-def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg)"):
+def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg)", Title="Y against X"):
     #makes a dictonary out of the labels to be set as dataframe index column and value names
     columnDict = [xLabel,yLabel,zLabel]
     
@@ -106,7 +110,7 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel(xLabel)
     plt.ylabel(yLabel)
-   #plt.title("FLXLRM 1.00")
+    plt.title(Title)
     plt.show()
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
@@ -121,6 +125,7 @@ def get_energy_produced(filename):
     productionTN = f.variables["Bpeprd"][:]
 
     totalTNproduced = sum(productionTN[len(dumpTime)-1])
+    f.close()
     return totalTNproduced
 
 
