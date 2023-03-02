@@ -67,7 +67,7 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
             f = open(str(PATH)+str(names[c]), "w")
             #Read find the current hotspot radius
             HsRad = float((o_f[6])[-7:-2])
-            o_f[14] = "DEFINE BendRad "+str("%.5f" % round(HsRad+r,5))+"\n"
+            o_f[13] = "DEFINE BendRad "+str("%.5f" % round(HsRad+r,5))+"\n"
             f.writelines(o_f)
             f.close()
             c+=1
@@ -104,8 +104,7 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     for n in filenames:
         f.writelines("ppf2ncdf "+PATH+n[0:-3]+"ppf\n")
     f.close()
-    
-        
+
 filePATH = "data/radiusSweep10KeV/"
 no_barrierRadSweeps = 10
 no_radiusSweeps = 10

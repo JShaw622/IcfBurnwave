@@ -23,11 +23,13 @@ def main(inputFileName):
     rhoR=[]
     Hs_Tion=[]
     TNproduced=[]
+    i=0
     for f in inputfiles:
+        i+=1
         #removing newline character
         f=f[0:-1]
         rhoR.append(get_Hs_rhoR(f))
-        Hs_Tion.append(get_Hs_Tion(f))
+        Hs_Tion.append(i)
         TNproduced.append(get_energy_produced(f))
     
     #print(TNproduced)
@@ -38,19 +40,19 @@ def gen_rhoR_T_graph(x, y, z):
     #Puts data into a pandas dataframe for seaborn plotting as a heatmap
     df = pd.DataFrame.from_dict(np.array([x,y,z]).T)
     df.columns = ['X_value','Y_value','Z_value']
-    pivotted= df.pivot('Y_value','X_value','Z_value')
-    
+    pivotted= df.pivot(index='Y_value',columns='X_value',values='Z_value')
+    print(pivotted)
     #pivotted = pivotted.sort_values(1,ascending=False)    
     
     ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label': 'TN energy produced (erg)'})
-    ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
+    #ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
     
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel("\u03C1r ($gcm^{-2}$)")
     plt.ylabel("T (KeV)")
-    plt.title("FLXLRM 1.00")
-    plt.show
+   #plt.title("FLXLRM 1.00")
+    plt.show()
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
 def get_energy_produced(filename):

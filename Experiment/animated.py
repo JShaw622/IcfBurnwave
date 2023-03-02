@@ -4,7 +4,7 @@ Created on Mon Dec 26 22:39:39 2022
 
 @author: Jack
 """
-
+import netCDF4
 from netCDF4 import Dataset
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,7 +13,6 @@ from matplotlib.animation import FuncAnimation
 PATH = ""# "data/radTransportOn/sweep_FLXLRM065/"
 hyades_file = PATH+'test.cdf'
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
-
 
 #Finding the number of zones in the problem and the number of time steps in the problem
 numZones = len(f.dimensions["NumZones"])
