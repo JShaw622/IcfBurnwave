@@ -62,6 +62,7 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
     c=0
     for i in range(0, len(names), n_Hs_radius):
         for j in range(n_Hs_radius):
+            print(i , j)
             o_f = open(PATH+names[c], "r").readlines()
             #print("Barrier radius sweep file: " +PATH+ names[c])
             f = open(str(PATH)+str(names[c]), "w")
