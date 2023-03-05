@@ -57,15 +57,18 @@ def gen_rhoR_T_graph(x, y, z):
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
 def get_energy_produced(filename):
     #print("Getting energy produced from: " + filename)
-    f = Dataset(filename,mode='r')
+    try:
+        f = Dataset(filename,mode='r')
+    except:
+        print("Error reading: " + filename)
+        totalTNproduced = 0
+    else:
+        #Array of dump times i.e. times at which data is put into the ppf/cdf file
+        dumpTime = f.variables["DumpTimes"][:]
     
-    #Array of dump times i.e. times at which data is put into the ppf/cdf file
-    dumpTime = f.variables["DumpTimes"][:]
-    
-    #total thermonuclear energy production in zone in erg
-    productionTN = f.variables["Bpeprd"][:]
-
-    totalTNproduced = sum(productionTN[len(dumpTime)-1])
+        #total thermonuclear energy production in zone in erg
+        productionTN = f.variables["Bpeprd"][:]
+        totalTNproduced = sum(productionTN[len(dumpTime)-1])
     return totalTNproduced
 
 #Reads a file finds the hotspot density and radius and calculates the rhoR value.
@@ -97,12 +100,15 @@ def get_Hs_rhoR(filename):
 #Reads a file and returns the temperature of the 1st zone at the begining of the problem
 def get_Hs_Tion(filename):
     #print("Getting Hotspot temperature from: " + filename)
-    f = Dataset(filename,mode='r')
-    
-    #zone ion temperature in keV
-    Temp = f.variables["Ti"][0][0]
-    
-    f.close()
+    try:
+        f = Dataset(filename,mode='r')
+        #zone ion temperature in keV
+        Temp = f.variables["Ti"][0][0]
+        
+        f.close()
+    except:
+        print("Error reading: " + filename)
+        Temp = 0
     return Temp
     
 #if __name__ == "__main__":

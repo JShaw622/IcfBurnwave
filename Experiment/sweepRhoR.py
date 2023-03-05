@@ -62,6 +62,7 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
     c=0
     for i in range(0, len(names), n_Hs_radius):
         for j in range(n_Hs_radius):
+            print(i , j)
             o_f = open(PATH+names[c], "r").readlines()
             #print("Barrier radius sweep file: " +PATH+ names[c])
             f = open(str(PATH)+str(names[c]), "w")
@@ -106,14 +107,14 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     f.close()
 
 filePATH = "data/radiusSweep10KeV/"
-no_barrierRadSweeps = 20
-no_radiusSweeps = 20
+no_barrierRadSweeps = 10
+no_radiusSweeps = 10
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.01, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.003, final_r=0.006, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
 r_sweep_barrier_radius(filenames, init_r=0.00010, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
