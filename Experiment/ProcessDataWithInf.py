@@ -34,7 +34,7 @@ def main(inputFileName):
         Bar_rhoR.append(get_Bar_rhoR(f))
         TNproduced.append(get_energy_produced(f))
         
-        #print(Hs_rhoR[i-1], Bar_rhoR[i-1])
+        print(Hs_rhoR[i-1], Bar_rhoR[i-1])
     gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduced, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
 
@@ -101,7 +101,6 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg
     
     ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label':"test"})
     #ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
-    
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel(xLabel)

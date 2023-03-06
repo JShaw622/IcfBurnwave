@@ -8,7 +8,7 @@ This is to generate a parameter sweep chainging the radius of the barrier for a
  set density and changing the radius of the hotspot to find ignition point.
 """
 
-original_f = "data/radiusSweep10KeV/originalInput.inf"
+original_f = "data/radiusSweep10KeVColdBarrier/originalInput.inf"
 
 #creates a list of filenames and creates the files
 def get_filenames(T, n_Hs_radius=10, n_barrier_radius=10, PATH="data/"):
@@ -76,7 +76,7 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
         
 #generates a list of the names of output files to be read by dataprocessing    
 def gen_cdf_list(filenames, PATH="data/"):
-    f= open("inputFiles.txt", "w")
+    f= open(PATH+"inputFiles.txt", "w")
     
     for n in filenames:
         f.writelines(PATH+n[0:-3]+"cdf\n")
@@ -88,11 +88,11 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
     
     print("Creating batch file")
     
-    f = (open("batchfiles/runScripts.sh", "w", newline="\n"))
+    f = (open("batchfiles/runScriptsColdBarrier.sh", "w", newline="\n"))
     
     #Parameters 
     f.writelines("#!/bin/bash\n")
-    f.writelines("#SBATCH --job-name=Hyburn\n")
+    f.writelines("#SBATCH --job-name=Hyburn2\n")
     f.writelines("#SBATCH -p scarf\n")
     f.writelines("#SBATCH --output=hyades_output.txt\n")
     f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
@@ -106,7 +106,7 @@ def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/
         f.writelines("ppf2ncdf "+PATH+n[0:-3]+"ppf\n")
     f.close()
 
-filePATH = "data/radiusSweep10KeV/"
+filePATH = "data/radiusSweep10KeVColdBarrier/"
 no_barrierRadSweeps = 10
 no_radiusSweeps = 10
 
