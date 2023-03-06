@@ -114,8 +114,8 @@ filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_bar
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.003, final_r=0.006, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
-r_sweep_barrier_radius(filenames, init_r=0.00010, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.01, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
 gen_cdf_list(filenames, PATH = filePATH)
