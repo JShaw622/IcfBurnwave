@@ -82,7 +82,7 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/"):
+def gen_scarf_batch_file(filenames,PATH="/home/vol05/scarf1185/icfBurnwave/test/cold/"):
     #Finding number of tasks
     n_tasks = len(filenames)*2
     
