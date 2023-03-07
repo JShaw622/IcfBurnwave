@@ -62,12 +62,12 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
     c=0
     for i in range(0, len(names), n_Hs_radius):
         for j in range(n_Hs_radius):
-            print(i , j)
+            print(j, i/n_Hs_radius, r)
             o_f = open(PATH+names[c], "r").readlines()
             #print("Barrier radius sweep file: " +PATH+ names[c])
             f = open(str(PATH)+str(names[c]), "w")
             #Read find the current hotspot radius
-            HsRad = float((o_f[6])[-7:-2])
+            HsRad = float((o_f[6])[-7:-1])
             o_f[13] = "DEFINE BendRad "+str("%.5f" % round(HsRad+r,5))+"\n"
             f.writelines(o_f)
             f.close()
