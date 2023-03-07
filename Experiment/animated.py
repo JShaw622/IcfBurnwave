@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = ""# "data/radTransportOn/sweep_FLXLRM065/"
-hyades_file = PATH+'test.cdf'
+PATH = "data/radiusSweep10KeV/"
+hyades_file = PATH+'test_T_10_0_9.cdf'
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem
