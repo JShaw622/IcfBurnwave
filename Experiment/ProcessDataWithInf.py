@@ -24,7 +24,7 @@ def main(inputFileName):
     Hs_rhoR=[]
     Hs_Tion=[]
     Bar_rhoR=[]
-    TNproduced=[]
+    TNproduceRate=[]
     i=0
     for f in inputfiles:
         i+=1
@@ -32,10 +32,10 @@ def main(inputFileName):
         f=f[0:-1]
         Hs_rhoR.append(get_HS_rhoR(f))
         Bar_rhoR.append(get_Bar_rhoR(f))
-        TNproduced.append(get_energy_produced(f))
+        TNproduceRate.append(get_energy_prodRate(f))
         
-        print(Hs_rhoR[i-1], Bar_rhoR[i-1])
-    gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduced, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
+        #print(Hs_rhoR[i-1], Bar_rhoR[i-1])
+    gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduceRate, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
 
 #reads inf file to find barrier radius and density    
@@ -56,7 +56,6 @@ def get_Bar_rhoR(filename):
     
     Bar_rad = round(BarEnd_Rad-Hs_Rad,5)
     
-    print(Bar_rad)
     
     ##### FIND BARRIER DENSITY #####
     text = "DEFINE BDensity "
@@ -90,7 +89,7 @@ def get_HS_rhoR(filename):
 
 
 #generates a graph in rhoR, T space of the energy produced
-def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg)"):
+def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy production rate ($erg/s$)"):
     #makes a dictonary out of the labels to be set as dataframe index column and value names
     columnDict = [xLabel,yLabel,zLabel]
     
@@ -101,7 +100,7 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg
     #print(pivotted)
     pivotted = pivotted.sort_values(yLabel,ascending=False)    
     
-    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label':zLabel})
+    ax = sns.heatmap(pivotted,cmap='magma', vmin=0,cbar_kws={'label':zLabel})
     #ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
@@ -111,7 +110,7 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg
     plt.show()
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
-def get_energy_produced(filename):
+def get_energy_prodRate(filename):
     #print("Getting energy produced from: " + filename)
     f = Dataset(filename,mode='r')
     
@@ -120,9 +119,12 @@ def get_energy_produced(filename):
     
     #total thermonuclear energy production in zone in erg
     productionTN = f.variables["Bpeprd"][:]
-
     totalTNproduced = sum(productionTN[len(dumpTime)-1])
-    return totalTNproduced
+    
+    ##### Find average energy production per second #####
+    productionRate = totalTNproduced/dumpTime[-1]
+    
+    return productionRate
 
 
 #Reads a file and returns the temperature of the 1st zone at the begining of the problem
