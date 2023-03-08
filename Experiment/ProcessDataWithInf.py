@@ -49,12 +49,14 @@ def get_Bar_rhoR(filename):
     
     ##### FIND BARRIER THICKNESS #####
     #read the radius of the hotspot from file
-    Hs_Rad = float((f[6])[-7:-2])
+    Hs_Rad = float((f[6])[-7:-1])
     
     #read the radius of the end of the barrier from file
-    BarEnd_Rad= float((f[13])[-7:-2])
+    BarEnd_Rad= float((f[13])[-7:-1])
     
     Bar_rad = round(BarEnd_Rad-Hs_Rad,5)
+    
+    print(Bar_rad)
     
     ##### FIND BARRIER DENSITY #####
     text = "DEFINE BDensity "
@@ -99,7 +101,7 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy produced (erg
     #print(pivotted)
     pivotted = pivotted.sort_values(yLabel,ascending=False)    
     
-    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label':"test"})
+    ax = sns.heatmap(pivotted,cmap='RdBu_r', vmin=0,cbar_kws={'label':zLabel})
     #ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
@@ -136,4 +138,5 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-main("inputFiles.txt")
+Path = "data/radiusSweep10KeVColdBarrierWide/"
+main(Path+"inputFiles.txt")
