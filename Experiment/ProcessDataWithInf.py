@@ -34,7 +34,7 @@ def main(inputFileName):
         Bar_rhoR.append(get_Bar_rhoR(f))
         TNproduceRate.append(get_energy_prodRate(f))
         
-        #print(Hs_rhoR[i-1], Bar_rhoR[i-1])
+        print(f,Hs_rhoR[i-1], Bar_rhoR[i-1])
     gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduceRate, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
 
@@ -123,7 +123,6 @@ def get_energy_prodRate(filename):
     
     ##### Find average energy production per second #####
     productionRate = totalTNproduced/dumpTime[-1]
-    
     return productionRate
 
 
