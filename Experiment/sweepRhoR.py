@@ -62,7 +62,7 @@ def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, 
     c=0
     for i in range(0, len(names), n_Hs_radius):
         for j in range(n_Hs_radius):
-            print(j, i/n_Hs_radius, r)
+            #print(j, i/n_Hs_radius, r)
             o_f = open(PATH+names[c], "r").readlines()
             #print("Barrier radius sweep file: " +PATH+ names[c])
             f = open(str(PATH)+str(names[c]), "w")
@@ -92,7 +92,7 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     
     #Parameters 
     f.writelines("#!/bin/bash\n")
-    f.writelines("#SBATCH --job-name=Hyburn2\n")
+    f.writelines("#SBATCH --job-name=Hyburn\n")
     f.writelines("#SBATCH -p scarf\n")
     f.writelines("#SBATCH --output=hyades_output.txt\n")
     f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
@@ -106,7 +106,7 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f.close()
 
 filePATH = "data/radiusSweep10KeVColdBarrierWide/"
-no_barrierRadSweeps = 2
+no_barrierRadSweeps = 5
 no_radiusSweeps = 5
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
@@ -114,7 +114,7 @@ filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_bar
 init_files(filenames, original_f,PATH = filePATH)
 
 r_sweep_Hs_radius(filenames, init_r = 0.006, final_r=0.011, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
-r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.0003, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
+r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
 gen_cdf_list(filenames, PATH = filePATH)
