@@ -44,7 +44,7 @@ def genSweep(names, steps, originalF, startGroups=5, finalGroups=155, PATH="data
         o_f = open(PATH+n, "r").readlines()
         #print("Radius sweep file: " + n)
         f = open(PATH+n, "w")
-        o_f[51] = "GROUP 1 "+str(group)+"0.001 100\n"
+        o_f[51] = "GROUP 1 "+str("%.2f" % round(group,3))+" 0.001 100\n"
         group+=groupIncriment
         f.writelines(o_f)
         f.close()
@@ -57,7 +57,7 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scipts/Convergence/"):
+def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Convergence/"):
     #Finding number of tasks
     n_tasks = len(filenames)*2
     
