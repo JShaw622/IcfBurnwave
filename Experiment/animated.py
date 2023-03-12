@@ -148,6 +148,12 @@ animTN = FuncAnimation(figTN, animateTN, init_func=initTN,
 animTN.save(PATH+'TN.gif', writer='imagemagick')
 print("Energy Producion finished")
 
+print("Saving to:" +PATH)
+
+fig2 = plt.figure()
+plt.scatter(position[-1][1:-1],zoneTi[-1])
+plt.show()
+
 print("End Time: ",dumpTime[endFrame-1])
 totalTNproduced = sum(productionTN[endFrame-1])
 print("Total TN production (erg): ",totalTNproduced)
