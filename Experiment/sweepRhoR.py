@@ -85,37 +85,45 @@ def gen_cdf_list(filenames, PATH="data/"):
 
 #generates the batch file for scarf to run
 def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/coldWide/"):
+    hyadesBatchFileName="Hbatch"
+    
     #Finding number of tasks
     n_tasks = len(filenames)*2
     
-    print("Creating batch file")
+    print("Creating batch files")
     
-    f = (open(localPATH+ "runScriptsColdBarrierWide.sh", "w", newline="\n"))
+    scarfBatch = (open(localPATH+ "runScriptsColdBarrierWide.sh", "w", newline="\n"))
     
     #Parameters 
-    f.writelines("#!/bin/bash\n")
-    f.writelines("#SBATCH --job-name=Hyburn\n")
-    f.writelines("#SBATCH -p scarf\n")
-    f.writelines("#SBATCH --output=hyades_output.txt\n")
-    f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
-    f.writelines("#SBATCH --cpus-per-task=1\n")
-    f.writelines("#SBATCH --time=23:59:59\n")
-#Commands for runing scripts
+    scarfBatch.writelines("#!/bin/bash\n")
+    scarfBatch.writelines("#SBATCH --job-name=Hyburn\n")
+    scarfBatch.writelines("#SBATCH -p scarf\n")
+    scarfBatch.writelines("#SBATCH --output=hyades_output.txt\n")
+    scarfBatch.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    scarfBatch.writelines("#SBATCH --cpus-per-task=1\n")
+    scarfBatch.writelines("#SBATCH --time=23:59:59\n")
+    
+    scarfBatch.writelines("hyades -b -c"+hyadesBatchFileName+"\n")
+    
+    
+#Commands for creating Hyades Batch file 
+    hyadesBatch = open(localPATH+hyadesBatchFileName, "w", newline="\n" )
     for n in filenames:
-        f.writelines("hyades -c "+scarfPATH+n+"\n")
+        hyadesBatch.writelines(scarfPATH+n+"\n")
         #Commands for converting to cdf file
-        f.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
-    f.close()
+        scarfBatch.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
+    scarfBatch.close()
+    hyadesBatch.close()
 
 filePATH = "data/radiusSweep10KeVColdBarrierWide/"
-no_barrierRadSweeps = 5
+no_barrierRadSweeps = 2
 no_radiusSweeps = 5
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.006, final_r=0.011, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.010, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
 r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)

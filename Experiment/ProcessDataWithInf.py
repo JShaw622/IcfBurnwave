@@ -35,8 +35,24 @@ def main(inputFileName):
         TNproduceRate.append(get_energy_prodRate(f))
         
         #print(f,Hs_rhoR[i-1], Bar_rhoR[i-1])
+    
+    calc_TNchange(TNproduceRate)
+    
     gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduceRate, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
+def calc_TNchange(TNArray):
+    diffArray=[]
+    for i in range(len(TNArray)-1):
+        diff = TNArray[i+1]-TNArray[i]
+        print(diff)
+        
+        diffArray.append(diff)
+    
+    TNFig = plt.figure()
+    plt.scatter(range(len(diffArray)),diffArray)
+    #plt.plot(TNArray)
+    plt.show()
+    
 
 #reads inf file to find barrier radius and density    
 def get_Bar_rhoR(filename):
@@ -119,7 +135,7 @@ def get_energy_prodRate(filename):
     
     #total thermonuclear energy production in zone in erg
     productionTN = f.variables["Bpeprd"][:]
-    totalTNproduced = sum(productionTN[len(dumpTime)-1])
+    totalTNproduced = sum(productionTN[len(dumpTime)-1][15:-1])
     
     ##### Find average energy production per second #####
     productionRate = totalTNproduced/dumpTime[-1]
