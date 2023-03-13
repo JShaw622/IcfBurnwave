@@ -135,7 +135,7 @@ def get_energy_prodRate(filename):
     
     #total thermonuclear energy production in zone in erg
     productionTN = f.variables["Bpeprd"][:]
-    totalTNproduced = sum(productionTN[len(dumpTime)-1][15:-1])
+    totalTNproduced = sum(productionTN[len(dumpTime)-1])
     
     ##### Find average energy production per second #####
     productionRate = totalTNproduced/dumpTime[-1]
