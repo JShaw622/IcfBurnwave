@@ -5,7 +5,7 @@
 #SBATCH --ntasks=20
 #SBATCH --cpus-per-task=1
 #SBATCH --time=23:59:59
-hyades -b -cHbatch
+hyades -b -cHbatch.bat
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/test/coldWide/test_T_10_0_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/test/coldWide/test_T_10_0_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/test/coldWide/test_T_10_1_0.ppf
