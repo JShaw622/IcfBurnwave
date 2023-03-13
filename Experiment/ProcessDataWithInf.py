@@ -127,8 +127,11 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy production ra
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
 def get_energy_prodRate(filename):
-    #print("Getting energy produced from: " + filename)
-    f = Dataset(filename,mode='r')
+    try:
+        #print("Getting energy produced from: " + filename)
+        f = Dataset(filename,mode='r')
+    except:
+        return 0
     
     #Array of dump times i.e. times at which data is put into the ppf/cdf file
     dumpTime = f.variables["DumpTimes"][:]

@@ -84,36 +84,29 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/coldWide/"):
-    hyadesBatchFileName="Hbatch"
-    
+def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Cold/"):
     #Finding number of tasks
-    n_tasks = len(filenames)*2
+    n_tasks = len(filenames)
     
-    print("Creating batch files")
+    print("Creating batch file")
     
-    scarfBatch = (open(localPATH+ "runScriptsColdBarrierWide.sh", "w", newline="\n"))
+    f = (open(localPATH+ "runBatch.sh", "w", newline="\n"))
     
     #Parameters 
-    scarfBatch.writelines("#!/bin/bash\n")
-    scarfBatch.writelines("#SBATCH --job-name=Hyburn\n")
-    scarfBatch.writelines("#SBATCH -p scarf\n")
-    scarfBatch.writelines("#SBATCH --output=hyades_output.txt\n")
-    scarfBatch.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
-    scarfBatch.writelines("#SBATCH --cpus-per-task=1\n")
-    scarfBatch.writelines("#SBATCH --time=23:59:59\n")
-    
-    scarfBatch.writelines("hyades -b -c"+hyadesBatchFileName+"\n")
-    
-    
-#Commands for creating Hyades Batch file 
-    hyadesBatch = open(localPATH+hyadesBatchFileName, "w", newline="\n" )
+    f.writelines("#!/bin/bash\n")
+    f.writelines("#SBATCH --job-name=Hyburn\n")
+    f.writelines("#SBATCH -p scarf\n")
+    f.writelines("#SBATCH --output=hyades_output.txt\n")
+    f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    f.writelines("#SBATCH --cpus-per-task=1\n")
+    f.writelines("#SBATCH --time=23:59:59\n")
+#Commands for creating Hyades Batch file scripts
     for n in filenames:
-        hyadesBatch.writelines(scarfPATH+n+"\n")
+        f.writelines("srun -n1 --exclusive hyades -c "+scarfPATH+n+" &\n")
         #Commands for converting to cdf file
-        scarfBatch.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
-    scarfBatch.close()
-    hyadesBatch.close()
+        #f.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
+    f.writeline("wait")
+    f.close()
 
 filePATH = "data/radiusSweep10KeVColdBarrierWide/"
 no_barrierRadSweeps = 2
