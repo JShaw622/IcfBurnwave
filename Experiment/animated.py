@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 PATH = "data/radiusSweep10KeVColdBarrierWide/"
-hyades_file = PATH+'test_T_10_0_0.cdf'#"originalinput.cdf"
+hyades_file = PATH+'test_T_10_4_1.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem
@@ -157,5 +157,28 @@ plt.show()
 print("End Time: ",dumpTime[endFrame-1])
 totalTNproduced = sum(productionTN[endFrame-1])
 print("Total TN production (erg): ",totalTNproduced)
+
+#reads inf file to find HS radius and density    
+def get_HS_rhoR(filename):
+    #convert filename from .cdf to .inf
+    filename = filename[0:-4]+".inf"
+    #open file convert to array of lines in file and close the file to save memory
+    file = open(filename, "r")
+    f = file.readlines()
+    file.close()
+    
+    ##### FIND HOT SPOT RADIUS #####
+    #read the radius of the hotspot from file
+    Hs_Rad = float((f[6])[-7:-2])
+    
+    ##### FIND HOT SPOT DENSITY #####
+    text = "DEFINE HsDensity "
+    HS_rho = float(f[9].replace(text, ""))
+    
+    ###### Calculate and return the rhoR of the hotspot #####
+    rhoR = round(Hs_Rad*HS_rho,5)
+    return (rhoR)
+
+print(get_HS_rhoR(hyades_file))
 
 f.close()

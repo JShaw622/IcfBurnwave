@@ -88,9 +88,10 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     #Finding number of tasks
     n_tasks = len(filenames)
     
-    print("Creating batch file")
+    print("Creating batch files")
     
     f = (open(localPATH+ "runBatch.sh", "w", newline="\n"))
+    f2 = (open(localPATH+ "convertBatch.sh", "w", newline="\n"))
     
     #Parameters 
     f.writelines("#!/bin/bash\n")
@@ -100,12 +101,21 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=23:59:59\n")
+    
+    f2.writelines("#!/bin/bash\n")
+    f2.writelines("#SBATCH --job-name=HyburnConvert\n")
+    f2.writelines("#SBATCH -p scarf\n")
+    f2.writelines("#SBATCH --output=convert-output.txt\n")
+    f2.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    f2.writelines("#SBATCH --cpus-per-task=1\n")
+    f2.writelines("#SBATCH --time=23:59:59\n")
 #Commands for creating Hyades Batch file scripts
     for n in filenames:
         f.writelines("srun -n1 --exclusive hyades -c "+scarfPATH+n+" &\n")
         #Commands for converting to cdf file
-        #f.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
-    f.writeline("wait")
+        f2.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
+    f.writelines("wait")
+    f2.close()
     f.close()
 
 filePATH = "data/radiusSweep10KeVColdBarrierWide/"
