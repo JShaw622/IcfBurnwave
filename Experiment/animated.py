@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 PATH = "data/radiusSweep10KeVColdBarrierWide/"
-hyades_file = PATH+'test_T_10_1_0.cdf'#"originalinput.cdf"
+hyades_file = PATH+'test_T_10_2_0.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem

@@ -119,14 +119,14 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f.close()
 
 filePATH = "data/radiusSweep10KeVColdBarrierWide/"
-no_barrierRadSweeps = 2
+no_barrierRadSweeps = 3
 no_radiusSweeps = 5
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.010, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.007, final_r=0.015, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
 r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
