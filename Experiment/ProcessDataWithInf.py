@@ -34,7 +34,7 @@ def main(inputFileName):
         Bar_rhoR.append(get_Bar_rhoR(f))
         TNproduceRate.append(get_energy_prodRate(f))
         
-        #print(f,Hs_rhoR[i-1], Bar_rhoR[i-1])
+        print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
     
     calc_TNchange(TNproduceRate)
     
@@ -44,7 +44,7 @@ def calc_TNchange(TNArray):
     diffArray=[]
     for i in range(len(TNArray)-1):
         diff = TNArray[i+1]-TNArray[i]
-        print(diff)
+        #print(diff)
         
         diffArray.append(diff)
     
@@ -131,6 +131,7 @@ def get_energy_prodRate(filename):
         #print("Getting energy produced from: " + filename)
         f = Dataset(filename,mode='r')
     except:
+        print("Error reading: " +filename)
         return 0
     
     #Array of dump times i.e. times at which data is put into the ppf/cdf file
