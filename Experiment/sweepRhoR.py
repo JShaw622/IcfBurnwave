@@ -8,7 +8,7 @@ This is to generate a parameter sweep chainging the radius of the barrier for a
  set density and changing the radius of the hotspot to find ignition point.
 """
 
-original_f = "data/radiusSweep10KeVColdBarrierWide/originalInput.inf"
+original_f = "data/Magnesium/originalInput.inf"
 
 #creates a list of filenames and creates the files
 def get_filenames(T, n_Hs_radius=10, n_barrier_radius=10, PATH="data/"):
@@ -84,28 +84,30 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Cold/"):
+def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Magnesium/"):
     #Finding number of tasks
-    n_tasks = len(filenames)
+    n_tasks = len(filenames)+2
+    
+    jobname="Hyburn_Mg"
     
     print("Creating batch files")
     
-    f = (open(localPATH+ "runBatch.sh", "w", newline="\n"))
-    f2 = (open(localPATH+ "convertBatch.sh", "w", newline="\n"))
+    f = (open(localPATH+ "runBatch"+jobname+".sh", "w", newline="\n"))
+    f2 = (open(localPATH+ "convertBatch"+jobname+".sh", "w", newline="\n"))
     
     #Parameters 
     f.writelines("#!/bin/bash\n")
-    f.writelines("#SBATCH --job-name=Hyburn\n")
+    f.writelines("#SBATCH --job-name="+jobname+"\n")
     f.writelines("#SBATCH -p scarf\n")
-    f.writelines("#SBATCH --output=hyades_output.txt\n")
+    f.writelines("#SBATCH --output="+jobname+".txt\n")
     f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=23:59:59\n")
     
     f2.writelines("#!/bin/bash\n")
-    f2.writelines("#SBATCH --job-name=HyburnConvert\n")
+    f2.writelines("#SBATCH --job-name=Convert_"+jobname+"\n")
     f2.writelines("#SBATCH -p scarf\n")
-    f2.writelines("#SBATCH --output=convert-output.txt\n")
+    f2.writelines("#SBATCH --output=convert-"+jobname+".txt\n")
     f2.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
     f2.writelines("#SBATCH --cpus-per-task=1\n")
     f2.writelines("#SBATCH --time=23:59:59\n")
@@ -118,15 +120,15 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f2.close()
     f.close()
 
-filePATH = "data/radiusSweep10KeVColdBarrierWide/"
-no_barrierRadSweeps = 3
-no_radiusSweeps = 5
+filePATH = "data/Magnesium/"
+no_barrierRadSweeps = 10
+no_radiusSweeps = 10
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.007, final_r=0.015, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.007, final_r=0.07, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
 r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)

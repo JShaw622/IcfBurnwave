@@ -5,7 +5,7 @@ Created on Fri Mar 10 13:36:07 2023
 @author: Jack Shaw
 """
 
-original_f = "data/convergenceTest/originalInput.inf"
+original_f = "data/opacityConvergence/originalInput.inf"
 
 #creates a list of filenames and creates the files
 def get_filenames(steps, PATH="data/"):
@@ -31,7 +31,7 @@ def init_files(names, original_filename, PATH="data/"):
         f.writelines(o_f)
         f.close()
     
-def genSweep(names, steps, originalF, startGroups=5, finalGroups=155, PATH="data/"):
+def genSweep(names, steps, originalF, startGroups=50, finalGroups=2000, PATH="data/"):
     initNo = startGroups
     groupIncriment =(finalGroups-startGroups)/(steps-1)
     i=0
@@ -44,7 +44,7 @@ def genSweep(names, steps, originalF, startGroups=5, finalGroups=155, PATH="data
         o_f = open(PATH+n, "r").readlines()
         #print("Radius sweep file: " + n)
         f = open(PATH+n, "w")
-        o_f[51] = "GROUP 1 "+str("%.2f" % round(group,3))+" 0.001 100\n"
+        o_f[51] = "GROUP 1 150 1 "+str(round(group))+"\n"
         group+=groupIncriment
         f.writelines(o_f)
         f.close()
@@ -59,29 +59,42 @@ def gen_cdf_list(filenames, PATH="data/"):
 #generates the batch file for scarf to run
 def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Convergence/"):
     #Finding number of tasks
-    n_tasks = len(filenames)*2
+    #Finding number of tasks
+    n_tasks = len(filenames)
     
-    print("Creating batch file")
+    print("Creating batch files")
     
     f = (open(localPATH+ "runScriptsConvergence.sh", "w", newline="\n"))
+    f2 = (open(localPATH+ "convertBatch.sh", "w", newline="\n"))
     
     #Parameters 
     f.writelines("#!/bin/bash\n")
     f.writelines("#SBATCH --job-name=HyburnConvergence\n")
     f.writelines("#SBATCH -p scarf\n")
-    f.writelines("#SBATCH --output=hyades_outputConvergence.txt\n")
+    f.writelines("#SBATCH --output=hyades_output_Convergece.txt\n")
     f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=23:59:59\n")
-#Commands for runing scripts
+    
+    f2.writelines("#!/bin/bash\n")
+    f2.writelines("#SBATCH --job-name=HyburnConvert\n")
+    f2.writelines("#SBATCH -p scarf\n")
+    f2.writelines("#SBATCH --output=convert-output.txt\n")
+    f2.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    f2.writelines("#SBATCH --cpus-per-task=1\n")
+    f2.writelines("#SBATCH --time=23:59:59\n")
+#Commands for creating Hyades Batch file scripts
     for n in filenames:
-        f.writelines("hyades -c "+scarfPATH+n+"\n")
+        f.writelines("srun -n1 --exclusive hyades -c "+scarfPATH+n+" &\n")
         #Commands for converting to cdf file
-        f.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
+        f2.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
+    f.writelines("wait")
+    f2.close()
     f.close()
 
-filePATH = "data/convergenceTest/"
-no_groupSteps = 5
+
+filePATH = "data/opacityConvergence/"
+no_groupSteps = 50
 
 filenames = get_filenames(no_groupSteps, PATH = filePATH)
 

@@ -30,11 +30,11 @@ def main(inputFileName):
         i+=1
         #removing newline character
         f=f[0:-1]
-        Hs_rhoR.append(get_HS_rhoR(f))
-        Bar_rhoR.append(get_Bar_rhoR(f))
+        Hs_rhoR.append(i)
+        Bar_rhoR.append(1)
         TNproduceRate.append(get_energy_prodRate(f))
         
-        print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
+        #print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
     
     calc_TNchange(TNproduceRate)
     
@@ -159,5 +159,5 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/radiusSweep10KeVColdBarrierWide/"
+Path = "data/opacityConvergence/"
 main(Path+"inputFiles.txt")
