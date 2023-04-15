@@ -8,8 +8,6 @@ This is to generate a parameter sweep chainging the radius of the barrier for a
  set density and changing the radius of the hotspot to find ignition point.
 """
 
-original_f = "data/Magnesium/originalInput.inf"
-
 #creates a list of filenames and creates the files
 def get_filenames(T, n_Hs_radius=10, n_barrier_radius=10, PATH="data/"):
     f = []
@@ -84,11 +82,11 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Magnesium/"):
+def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Small/Mg/"):
     #Finding number of tasks
     n_tasks = len(filenames)+2
     
-    jobname="Hyburn_Mg"
+    jobname="Hyburn_Small_Mg"
     
     print("Creating batch files")
     
@@ -113,22 +111,26 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f2.writelines("#SBATCH --time=23:59:59\n")
 #Commands for creating Hyades Batch file scripts
     for n in filenames:
-        f.writelines("srun -n1 --exclusive hyades -c "+scarfPATH+n+" &\n")
+        f.writelines("srun -n1 --exclusive hyades "+scarfPATH+n+" &\n")
         #Commands for converting to cdf file
         f2.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
     f.writelines("wait")
     f2.close()
     f.close()
 
-filePATH = "data/Magnesium/"
-no_barrierRadSweeps = 10
-no_radiusSweeps = 10
+filePATH = "data/SmallRuns/Mg/"
+
+original_f = filePATH+"originalInput.inf"
+
+
+no_barrierRadSweeps = 3
+no_radiusSweeps = 3
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.007, final_r=0.07, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.01, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
 r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
