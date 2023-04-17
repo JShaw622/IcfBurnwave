@@ -14,9 +14,9 @@ from pylab import *
 import matplotlib.pyplot as plt
 
 
-def main(inputFileName):
+def main(path, inputFileName, outputFilename):
     #takes system input and reads the given file which should contain the cdf files to be processed
-    inputfiles = open(inputFileName, "r").readlines()
+    inputfiles = open(path+inputFileName, "r").readlines()
     print("Processing files; ")
     for i in inputfiles:
         print(i[0:-1])
@@ -37,22 +37,61 @@ def main(inputFileName):
         if TNproduceRate[i-1] !=0:
             print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
     
-    calc_TNchange(TNproduceRate)
+    #outputs the critical RhoR for ignition into a csv file:
+    ignitionIndexArray=calc_TNchange(TNproduceRate)
+    error = (Hs_rhoR[1]-Hs_rhoR[0])/2
+    print_criticalRhoR(ignitionIndexArray,inputfiles,error, path+outputFilename)        
     
     gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduceRate, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
+def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
+    #Consider only the files with input index
+    print("\nIgnition in files:")
+    Hs_rhoR=[]
+    Bar_rhoR=[]
+    errorArray=[]
+    i=0
+    for x in index:
+        f=files[x]
+        errorArray.append(error)
+        #removes newline character
+        f=f[0:-1]
+        Hs_rhoR.append(get_HS_rhoR(f))
+        Bar_rhoR.append(get_Bar_rhoR(f))
+        print(f+" $\\rho r_{hs}$: "+str(Hs_rhoR[i])+" $\\rho r_{bar}$: "+str(Bar_rhoR[i]))
+        i+=1
+        
+    df=pd.DataFrame(np.array([Hs_rhoR,errorArray,Bar_rhoR]).T)
+    df.columns=["$\\rho r_{hs}$","$\\delta \\rho r_{hs}$","$\\rho r_{bar}$"]
+    print(df)
+    
+    df.to_csv(outputFilename)
+    
+    
+    
+    
+
 def calc_TNchange(TNArray):
+    #Array stores index of first instance of ignition.
+    ignitionIndexArr=[]
+    
     diffArray=[]
     for i in range(len(TNArray)-1):
         diff = TNArray[i+1]-TNArray[i]
-        #print(diff)
+        #'print(diff)
         
         diffArray.append(diff)
+        
+        if diffArray[i]>=0:
+            if diff >10**26:
+                #print("Ignition at: "+str(i+1))
+                ignitionIndexArr.append(i+1)
     
     TNFig = plt.figure()
     plt.scatter(range(len(diffArray)),diffArray)
     #plt.plot(TNArray)
     plt.show()
+    return ignitionIndexArr
     
 
 #reads inf file to find barrier radius and density    
@@ -161,4 +200,5 @@ def get_Hs_Tion(filename):
 #if __name__ == "__main__":
 #    a = sys.argv[1]
 Path = "data/SmallRuns2/Ag/"
-main(Path+"inputFiles.txt")
+outputName = "Ag.csv"
+main(Path,"inputFiles.txt",outputName)
