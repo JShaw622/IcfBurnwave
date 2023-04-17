@@ -81,15 +81,15 @@ def calc_TNchange(TNArray):
         #'print(diff)
         
         diffArray.append(diff)
+        print(diff/TNArray[i-1])
         if diffArray[i]>=0:
-            if diff >10**26:
+            if diff/TNArray[i-1] >=100:
                 if newline:
                     #print("Ignition at: "+str(i+1))
                     ignitionIndexArr.append(i+1)
                     newline=False
         else:
             newline=True
-        print(newline)
             
     TNFig = plt.figure()
     plt.scatter(range(len(diffArray)),diffArray)
@@ -203,6 +203,6 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/SmallRuns2/C/"
-outputName = "C.csv"
+Path = "data/SmallRuns2/Fe/"
+outputName = "Fe.csv"
 main(Path,"inputFiles.txt",outputName)

@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = "data/SmallRuns2//"
-hyades_file = PATH+'test_T_10_0_0.cdf'#"originalinput.cdf"
+PATH = "data/SmallRuns2/C/"
+hyades_file = PATH+'test_T_10_0_2.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem
@@ -157,6 +157,8 @@ plt.show()
 print("End Time: ",dumpTime[endFrame-1])
 totalTNproduced = sum(productionTN[endFrame-1])
 print("Total TN production (erg): ",totalTNproduced)
+
+print("Production rate: ", totalTNproduced/dumpTime[endFrame-1])
 
 #reads inf file to find HS radius and density    
 def get_HS_rhoR(filename):

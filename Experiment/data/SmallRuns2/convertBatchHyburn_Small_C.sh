@@ -1,22 +1,32 @@
 #!/bin/bash
 #SBATCH --job-name=Convert_Hyburn_Small_C
-#SBATCH -p scarf
+#SBATCH -p devel
 #SBATCH --output=convert-Hyburn_Small_C.txt
-#SBATCH --ntasks=17
+#SBATCH --ntasks=27
 #SBATCH --cpus-per-task=1
-#SBATCH --time=23:59:59
+#SBATCH --time=11:00:00
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_0_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_0_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_0_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_0_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_0_4.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_1_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_1_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_1_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_1_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_1_4.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_2_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_2_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_2_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_2_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_2_4.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_3_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_3_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_3_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_3_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_3_4.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_4_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_4_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_4_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_4_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/test_T_10_4_4.ppf
