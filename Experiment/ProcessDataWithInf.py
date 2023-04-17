@@ -69,24 +69,28 @@ def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
     
     
     
-    
 
 def calc_TNchange(TNArray):
     #Array stores index of first instance of ignition.
     ignitionIndexArr=[]
     
+    newline=True
     diffArray=[]
     for i in range(len(TNArray)-1):
         diff = TNArray[i+1]-TNArray[i]
         #'print(diff)
         
         diffArray.append(diff)
-        
         if diffArray[i]>=0:
             if diff >10**26:
-                #print("Ignition at: "+str(i+1))
-                ignitionIndexArr.append(i+1)
-    
+                if newline:
+                    #print("Ignition at: "+str(i+1))
+                    ignitionIndexArr.append(i+1)
+                    newline=False
+        else:
+            newline=True
+        print(newline)
+            
     TNFig = plt.figure()
     plt.scatter(range(len(diffArray)),diffArray)
     #plt.plot(TNArray)
@@ -199,6 +203,6 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/SmallRuns2/Mg/"
-outputName = "Mg.csv"
+Path = "data/SmallRuns2/C/"
+outputName = "C.csv"
 main(Path,"inputFiles.txt",outputName)

@@ -8,6 +8,15 @@ Created on Sun Apr 16 20:07:02 2023
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+import matplotlib.font_manager as font_manager
+
+mpl.rcParams['font.family']='serif'
+cmfont = font_manager.FontProperties(fname=mpl.get_data_path() + '/fonts/ttf/cmr10.ttf')
+mpl.rcParams['font.serif']=cmfont.get_name()
+mpl.rcParams['mathtext.fontset']='cm'
+mpl.rcParams['axes.unicode_minus']=False
+
 gamma = 5/3
 
 p1 =1

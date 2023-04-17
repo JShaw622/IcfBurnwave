@@ -1,0 +1,1041 @@
+
+
+
+
+
+
+
+
+                         HH        HH  YY        YY     AAAAAA     DDDDDDDDDDD   EEEEEEEEEEEE   SSSSSSSSSS 
+                         HH        HH  YY        YY    AAAAAAAA    DDDDDDDDDDDD  EEEEEEEEEEEE  SSSSSSSSSSSS
+                         HH        HH  YY        YY   AA      AA   DD        DD  EE            SS          
+                         HH        HH   YY      YY   AA        AA  DD        DD  EE            SS          
+                         HH        HH    YY    YY    AA        AA  DD        DD  EE            SS          
+                         HHHHHHHHHHHH     YY  YY     AAAAAAAAAAAA  DD        DD  EEEEEEEEEEEE  SSSSSSSSSSS 
+                         HHHHHHHHHHHH       YY       AAAAAAAAAAAA  DD        DD  EEEEEEEEEEEE   SSSSSSSSSSS
+                         HH        HH       YY       AA        AA  DD        DD  EE                      SS
+                         HH        HH       YY       AA        AA  DD        DD  EE                      SS
+                         HH        HH       YY       AA        AA  DD        DD  EE                      SS
+                         HH        HH       YY       AA        AA  DDDDDDDDDDDD  EEEEEEEEEEEE  SSSSSSSSSSSS
+                         HH        HH       YY       AA        AA  DDDDDDDDDDD   EEEEEEEEEEEE   SSSSSSSSSS 
+
+
+
+                                          A Radiation Hydrodynamics Code for Plasma Studies
+
+
+
+
+                                                   Cascade Applied Sciences, Inc.
+                                                            Longmont, CO
+
+
+                                                          Version: 01.12.05
+                                                          Compiled: 03/04/20
+                                                          Serial No.: 0220-209
+
+                                                          Machine type: Linux-64
+
+
+
+
+                           Copyright (C) 1990 - 2020, Cascade Applied Sciences, Inc.;  All Rights Reserved
+
+
+
+
+  Card input:
+
+    test_T_10_1_2                   
+     c
+     geometry 3
+     c
+     c Define hotspot parameters
+     c
+     DEFINE HsRad 0.00500
+     DEFINE HsEndZone 10
+     DEFINE HsT 10
+     DEFINE HsDensity 100
+     c
+     c Define barrier parameters
+     c
+     DEFINE BendRad 0.00540
+     DEFINE BendZone 15
+     DEFINE BT 200e-3
+     DEFINE BDensity 100
+     c
+     c Define Cold bulk fuel parameters
+     c
+     DEFINE totRad 0.1
+     DEFINE totalZones 70
+     DEFINE CfT 200e-3
+     DEFINE CfDensity 100
+     c
+     c Set up mesh
+     c Cold fuel has feathering increasing in size
+     c
+     MESH 1 HsEndZone+1 0 HsRad
+         MESH 1 11 0 0.00500
+     MESH HsEndZone+1 BendZone+1 HsRad BendRad
+         MESH 11 16 0.00500 0.00540
+     MESH BendZone+1 totalZones+1 BendRad totRad 1.1
+         MESH 16 71 0.00540 0.1 1.1
+     c
+     c Define hotspot region
+     c
+     REGION 1 HsEndZone 1 HsDensity HsT
+         REGION 1 10 1 100 10
+     MATERIAL 1 1. 2. 1
+     MATERIAL 1 1. 3. 1
+     c
+     c Define barrier region
+     c
+     REGION HsEndZone+1 BendZone 2 BDensity BT
+         REGION 11 15 2 100 200e-3
+     MATERIAL 2 6. 12. 1
+     c
+     c Define Cold fuel (Cf) @ T= 200 eV
+     c
+     REGION BendZone+1 totalZones 3 CfDensity CfT
+         REGION 16 70 3 100 200e-3
+     MATERIAL 3 1. 2. 1
+     MATERIAL 3 1. 3. 1
+     c
+     c Define opacity groups
+     c
+     GROUP 1 50 0.001 2000
+     c
+     c Define TN groups
+     c
+     c
+     c Use DT eos for Hs and Cf
+     c Use Iron eos for barrier
+     c
+     EOS 11 1 3
+     EOS 181 2
+     c
+     c Use average-atom, LTE ionization model for all regions
+     c
+     IONIZ 1 4
+     IONIZ 2 4
+     IONIZ 3 4
+     c
+     c Extrapolate EOS linearly for high and low temperatures and densities
+     c
+     EOSXTRP 1 2 2 2 2
+     EOSXTRP 2 2 2 2 2
+     EOSXTRP 3 2 2 2 2
+     c
+     c Turn on Thermonuclear burn in fuel regions
+     c
+     TNBURN 1 3
+     c
+     c Add a flux limit to prevent unphysical heatflows
+     c For Radiation (65%), ion and electron (DEFAULT 40%),
+     c Charged particles (65%)
+     c
+     PARM FLXLRM .65
+     PARM FLXLIM .4
+     PARM FLXLEM .4
+     c
+     PARM BCPFLXM .65
+     c
+     c Including ppf file output
+     c
+     PPARRAY r rcm rho ti BPEPRD
+     PARM postdt .5e-11
+     c
+     PARM DTMIN 1.e-30
+     PARM tstop 5e-10
+     PARM itmcyc 10
+     PARM NSTOP 10000
+ 17Apr23  15:04:31   test_T_10_1_2                         Cycle Zero Edit            Spherical Geometry
+
+ Zonal Information:
+   j  k    MeshPos      MeshVel      Density       Mass       ElecTemp      IonTemp      RadTemp     Pressure       Zbar   
+   1  1  0.00000E+00  0.00000E+00  1.00000E+02  5.23599E-08  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   2  1  5.00000E-04  0.00000E+00  1.00000E+02  3.66519E-07  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   3  1  1.00000E-03  0.00000E+00  1.00000E+02  9.94838E-07  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   4  1  1.50000E-03  0.00000E+00  1.00000E+02  1.93732E-06  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   5  1  2.00000E-03  0.00000E+00  1.00000E+02  3.19395E-06  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   6  1  2.50000E-03  0.00000E+00  1.00000E+02  4.76475E-06  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   7  1  3.00000E-03  0.00000E+00  1.00000E+02  6.64970E-06  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   8  1  3.50000E-03  0.00000E+00  1.00000E+02  8.84882E-06  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+   9  1  4.00000E-03  0.00000E+00  1.00000E+02  1.13621E-05  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+  10  1  4.50000E-03  0.00000E+00  1.00000E+02  1.41895E-05  1.00000E+01  1.00000E+01  1.00000E+01  1.22862E+18  9.99944E-01
+ 
+  11  2  5.00000E-03  0.00000E+00  1.00000E+02  2.55370E-06  2.00000E-01  2.00000E-01  2.00000E-01  5.12522E+15  4.40628E+00
+  12  2  5.08000E-03  0.00000E+00  1.00000E+02  2.63541E-06  2.00000E-01  2.00000E-01  2.00000E-01  5.12522E+15  4.40628E+00
+  13  2  5.16000E-03  0.00000E+00  1.00000E+02  2.71841E-06  2.00000E-01  2.00000E-01  2.00000E-01  5.12522E+15  4.40628E+00
+  14  2  5.24000E-03  0.00000E+00  1.00000E+02  2.80270E-06  2.00000E-01  2.00000E-01  2.00000E-01  5.12522E+15  4.40628E+00
+  15  2  5.32000E-03  0.00000E+00  1.00000E+02  2.88827E-06  2.00000E-01  2.00000E-01  2.00000E-01  5.12522E+15  4.40628E+00
+ 
+  16  3  5.40000E-03  0.00000E+00  1.00000E+02  1.86052E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  17  3  5.45030E-03  0.00000E+00  1.00000E+02  2.08661E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  18  3  5.50564E-03  0.00000E+00  1.00000E+02  2.34423E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  19  3  5.56650E-03  0.00000E+00  1.00000E+02  2.63854E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  20  3  5.63346E-03  0.00000E+00  1.00000E+02  2.97572E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  21  3  5.70711E-03  0.00000E+00  1.00000E+02  3.36320E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  22  3  5.78812E-03  0.00000E+00  1.00000E+02  3.80984E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  23  3  5.87724E-03  0.00000E+00  1.00000E+02  4.32638E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  24  3  5.97526E-03  0.00000E+00  1.00000E+02  4.92579E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  25  3  6.08309E-03  0.00000E+00  1.00000E+02  5.62381E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  26  3  6.20171E-03  0.00000E+00  1.00000E+02  6.43962E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  27  3  6.33218E-03  0.00000E+00  1.00000E+02  7.39671E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  28  3  6.47570E-03  0.00000E+00  1.00000E+02  8.52388E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  29  3  6.63357E-03  0.00000E+00  1.00000E+02  9.85658E-06  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  30  3  6.80723E-03  0.00000E+00  1.00000E+02  1.14387E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  31  3  6.99826E-03  0.00000E+00  1.00000E+02  1.33245E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  32  3  7.20839E-03  0.00000E+00  1.00000E+02  1.55818E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  33  3  7.43953E-03  0.00000E+00  1.00000E+02  1.82950E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  34  3  7.69379E-03  0.00000E+00  1.00000E+02  2.15699E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  35  3  7.97347E-03  0.00000E+00  1.00000E+02  2.55395E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  36  3  8.28112E-03  0.00000E+00  1.00000E+02  3.03715E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  37  3  8.61954E-03  0.00000E+00  1.00000E+02  3.62779E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  38  3  8.99180E-03  0.00000E+00  1.00000E+02  4.35277E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  39  3  9.40128E-03  0.00000E+00  1.00000E+02  5.24631E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  40  3  9.85171E-03  0.00000E+00  1.00000E+02  6.35204E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  41  3  1.03472E-02  0.00000E+00  1.00000E+02  7.72579E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  42  3  1.08922E-02  0.00000E+00  1.00000E+02  9.43915E-05  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  43  3  1.14917E-02  0.00000E+00  1.00000E+02  1.15842E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  44  3  1.21512E-02  0.00000E+00  1.00000E+02  1.42794E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  45  3  1.28766E-02  0.00000E+00  1.00000E+02  1.76780E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  46  3  1.36746E-02  0.00000E+00  1.00000E+02  2.19784E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  47  3  1.45524E-02  0.00000E+00  1.00000E+02  2.74374E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  48  3  1.55179E-02  0.00000E+00  1.00000E+02  3.43893E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  49  3  1.65800E-02  0.00000E+00  1.00000E+02  4.32690E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  50  3  1.77483E-02  0.00000E+00  1.00000E+02  5.46435E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  51  3  1.90334E-02  0.00000E+00  1.00000E+02  6.92534E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  52  3  2.04471E-02  0.00000E+00  1.00000E+02  8.80675E-04  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  53  3  2.20021E-02  0.00000E+00  1.00000E+02  1.12354E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  54  3  2.37126E-02  0.00000E+00  1.00000E+02  1.43778E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  55  3  2.55942E-02  0.00000E+00  1.00000E+02  1.84523E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  56  3  2.76639E-02  0.00000E+00  1.00000E+02  2.37461E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  57  3  2.99406E-02  0.00000E+00  1.00000E+02  3.06371E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  58  3  3.24449E-02  0.00000E+00  1.00000E+02  3.96229E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  59  3  3.51997E-02  0.00000E+00  1.00000E+02  5.13597E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  60  3  3.82300E-02  0.00000E+00  1.00000E+02  6.67130E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  61  3  4.15633E-02  0.00000E+00  1.00000E+02  8.68255E-03  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  62  3  4.52299E-02  0.00000E+00  1.00000E+02  1.13207E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  63  3  4.92632E-02  0.00000E+00  1.00000E+02  1.47855E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  64  3  5.36999E-02  0.00000E+00  1.00000E+02  1.93408E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  65  3  5.85801E-02  0.00000E+00  1.00000E+02  2.53362E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  66  3  6.39485E-02  0.00000E+00  1.00000E+02  3.32344E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  67  3  6.98536E-02  0.00000E+00  1.00000E+02  4.36487E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  68  3  7.63493E-02  0.00000E+00  1.00000E+02  5.73914E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  69  3  8.34945E-02  0.00000E+00  1.00000E+02  7.55399E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+  70  3  9.13543E-02  0.00000E+00  1.00000E+02  9.95230E-02  2.00000E-01  2.00000E-01  2.00000E-01  1.61506E+16  9.90196E-01
+ 
+  71     1.00000E-01  0.00000E+00
+
+
+   j  k    ZonePos            ElecDen      IonDen      ElecEnrg      IonEnrg      RadEnrg
+   1  1  3.75000000000E-04  2.40868E+25  2.40882E+25  3.02976E+08  3.02993E+08  7.18419E+08
+   2  1  8.03571428571E-04  2.40868E+25  2.40882E+25  2.12083E+09  2.12095E+09  5.02893E+09
+   3  1  1.28289473684E-03  2.40868E+25  2.40882E+25  5.75654E+09  5.75686E+09  1.36500E+10
+   4  1  1.77364864865E-03  2.40868E+25  2.40882E+25  1.12101E+10  1.12107E+10  2.65815E+10
+   5  1  2.26844262295E-03  2.40868E+25  2.40882E+25  1.84815E+10  1.84826E+10  4.38235E+10
+   6  1  2.76510989011E-03  2.40868E+25  2.40882E+25  2.75708E+10  2.75723E+10  6.53761E+10
+   7  1  3.26279527559E-03  2.40868E+25  2.40882E+25  3.84779E+10  3.84801E+10  9.12392E+10
+   8  1  3.76109467456E-03  2.40868E+25  2.40882E+25  5.12029E+10  5.12058E+10  1.21413E+11
+   9  1  4.25979262673E-03  2.40868E+25  2.40882E+25  6.57457E+10  6.57494E+10  1.55897E+11
+  10  1  4.75876383764E-03  2.40868E+25  2.40882E+25  8.21064E+10  8.21110E+10  1.94691E+11
+ 
+  11  2  5.04021163577E-03  2.21123E+25  5.01837E+24  1.73598E+08  3.93978E+07  5.60621E+03
+  12  2  5.12020832909E-03  2.21123E+25  5.01837E+24  1.79152E+08  4.06584E+07  5.78559E+03
+  13  2  5.20020512416E-03  2.21123E+25  5.01837E+24  1.84794E+08  4.19389E+07  5.96780E+03
+  14  2  5.28020201634E-03  2.21123E+25  5.01837E+24  1.90524E+08  4.32392E+07  6.15283E+03
+  15  2  5.36019900128E-03  2.21123E+25  5.01837E+24  1.96341E+08  4.45594E+07  6.34069E+03
+ 
+  16  3  5.42522939895E-03  2.38520E+25  2.40882E+25  2.20256E+08  2.22437E+08  4.08444E+03
+  17  3  5.47806330697E-03  2.38520E+25  2.40882E+25  2.47022E+08  2.49468E+08  4.58080E+03
+  18  3  5.53618202568E-03  2.38520E+25  2.40882E+25  2.77519E+08  2.80267E+08  5.14634E+03
+  19  3  5.60011428066E-03  2.38520E+25  2.40882E+25  3.12361E+08  3.15454E+08  5.79244E+03
+  20  3  5.67044170675E-03  2.38520E+25  2.40882E+25  3.52279E+08  3.55767E+08  6.53268E+03
+  21  3  5.74780414296E-03  2.38520E+25  2.40882E+25  3.98149E+08  4.02092E+08  7.38331E+03
+  22  3  5.83290545697E-03  2.38520E+25  2.40882E+25  4.51025E+08  4.55491E+08  8.36385E+03
+  23  3  5.92651995203E-03  2.38520E+25  2.40882E+25  5.12176E+08  5.17247E+08  9.49782E+03
+  24  3  6.02949941426E-03  2.38520E+25  2.40882E+25  5.83136E+08  5.88909E+08  1.08137E+04
+  25  3  6.14278086438E-03  2.38520E+25  2.40882E+25  6.65770E+08  6.72362E+08  1.23461E+04
+  26  3  6.26739508393E-03  2.38520E+25  2.40882E+25  7.62350E+08  7.69898E+08  1.41371E+04
+  27  3  6.40447599339E-03  2.38520E+25  2.40882E+25  8.75654E+08  8.84324E+08  1.62382E+04
+  28  3  6.55527096692E-03  2.38520E+25  2.40882E+25  1.00909E+09  1.01908E+09  1.87127E+04
+  29  3  6.72115217733E-03  2.38520E+25  2.40882E+25  1.16686E+09  1.17842E+09  2.16384E+04
+  30  3  6.90362907399E-03  2.38520E+25  2.40882E+25  1.35416E+09  1.36757E+09  2.51116E+04
+  31  3  7.10436210674E-03  2.38520E+25  2.40882E+25  1.57741E+09  1.59303E+09  2.92517E+04
+  32  3  7.32517782018E-03  2.38520E+25  2.40882E+25  1.84464E+09  1.86290E+09  3.42071E+04
+  33  3  7.56808545543E-03  2.38520E+25  2.40882E+25  2.16584E+09  2.18728E+09  4.01634E+04
+  34  3  7.83529520994E-03  2.38520E+25  2.40882E+25  2.55353E+09  2.57881E+09  4.73529E+04
+  35  3  8.12923832128E-03  2.38520E+25  2.40882E+25  3.02347E+09  3.05341E+09  5.60674E+04
+  36  3  8.45258915751E-03  2.38520E+25  2.40882E+25  3.59550E+09  3.63110E+09  6.66753E+04
+  37  3  8.80828951512E-03  2.38520E+25  2.40882E+25  4.29473E+09  4.33725E+09  7.96418E+04
+  38  3  9.19957534563E-03  2.38520E+25  2.40882E+25  5.15299E+09  5.20402E+09  9.55575E+04
+  39  3  9.63000615436E-03  2.38520E+25  2.40882E+25  6.21080E+09  6.27230E+09  1.15174E+05
+  40  3  1.01034973390E-02  2.38520E+25  2.40882E+25  7.51981E+09  7.59427E+09  1.39448E+05
+  41  3  1.06243557626E-02  2.38520E+25  2.40882E+25  9.14612E+09  9.23668E+09  1.69606E+05
+  42  3  1.11973188854E-02  2.38520E+25  2.40882E+25  1.11745E+10  1.12851E+10  2.07220E+05
+  43  3  1.18275978113E-02  2.38520E+25  2.40882E+25  1.37138E+10  1.38496E+10  2.54310E+05
+  44  3  1.25209246414E-02  2.38520E+25  2.40882E+25  1.69046E+10  1.70719E+10  3.13479E+05
+  45  3  1.32836045655E-02  2.38520E+25  2.40882E+25  2.09280E+10  2.11352E+10  3.88091E+05
+  46  3  1.41225731659E-02  2.38520E+25  2.40882E+25  2.60189E+10  2.62765E+10  4.82496E+05
+  47  3  1.50454594544E-02  2.38520E+25  2.40882E+25  3.24816E+10  3.28032E+10  6.02341E+05
+  48  3  1.60606552160E-02  2.38520E+25  2.40882E+25  4.07115E+10  4.11146E+10  7.54958E+05
+  49  3  1.71773912900E-02  2.38520E+25  2.40882E+25  5.12237E+10  5.17309E+10  9.49896E+05
+  50  3  1.84058214812E-02  2.38520E+25  2.40882E+25  6.46893E+10  6.53298E+10  1.19960E+06
+  51  3  1.97571148655E-02  2.38520E+25  2.40882E+25  8.19851E+10  8.27969E+10  1.52034E+06
+  52  3  2.12435573262E-02  2.38520E+25  2.40882E+25  1.04258E+11  1.05290E+11  1.93337E+06
+  53  3  2.28786632468E-02  2.38520E+25  2.40882E+25  1.33010E+11  1.34327E+11  2.46654E+06
+  54  3  2.46772983729E-02  2.38520E+25  2.40882E+25  1.70210E+11  1.71896E+11  3.15639E+06
+  55  3  2.66558149608E-02  2.38520E+25  2.40882E+25  2.18446E+11  2.20609E+11  4.05088E+06
+  56  3  2.88322004413E-02  2.38520E+25  2.40882E+25  2.81116E+11  2.83900E+11  5.21304E+06
+  57  3  3.12262409496E-02  2.38520E+25  2.40882E+25  3.62694E+11  3.66286E+11  6.72583E+06
+  58  3  3.38597012065E-02  2.38520E+25  2.40882E+25  4.69073E+11  4.73717E+11  8.69852E+06
+  59  3  3.67565223886E-02  2.38520E+25  2.40882E+25  6.08017E+11  6.14038E+11  1.12751E+07
+  60  3  3.99430397828E-02  2.38520E+25  2.40882E+25  7.89776E+11  7.97596E+11  1.46457E+07
+  61  3  4.34482222066E-02  2.38520E+25  2.40882E+25  1.02788E+12  1.03805E+12  1.90610E+07
+  62  3  4.73039353682E-02  2.38520E+25  2.40882E+25  1.34020E+12  1.35347E+12  2.48527E+07
+  63  3  5.15452315623E-02  2.38520E+25  2.40882E+25  1.75036E+12  1.76769E+12  3.24589E+07
+  64  3  5.62106683337E-02  2.38520E+25  2.40882E+25  2.28964E+12  2.31231E+12  4.24593E+07
+  65  3  6.13426590069E-02  2.38520E+25  2.40882E+25  2.99940E+12  3.02910E+12  5.56211E+07
+  66  3  6.69878582672E-02  2.38520E+25  2.40882E+25  3.93443E+12  3.97339E+12  7.29604E+07
+  67  3  7.31975862993E-02  2.38520E+25  2.40882E+25  5.16731E+12  5.21848E+12  9.58231E+07
+  68  3  8.00282953388E-02  2.38520E+25  2.40882E+25  6.79424E+12  6.86151E+12  1.25993E+08
+  69  3  8.75420828785E-02  2.38520E+25  2.40882E+25  8.94273E+12  9.03128E+12  1.65835E+08
+  70  3  9.58072561946E-02  2.38520E+25  2.40882E+25  1.17819E+13  1.18986E+13  2.18485E+08
+
+
+ Photon Group Structure:
+              Grp1        Grp2        Grp3        Grp4        Grp5        Grp6        Grp7        Grp8        Grp9       Grp10
+   Ebnd    1.0000E-03  1.3446E-03  1.8079E-03  2.4310E-03  3.2687E-03  4.3950E-03  5.9096E-03  7.9460E-03  1.0684E-02  1.4366E-02
+   Eavg    3.1623E-05  1.1596E-03  1.5592E-03  2.0964E-03  2.8189E-03  3.7902E-03  5.0963E-03  6.8525E-03  9.2139E-03  1.2389E-02
+
+   Ebnd    1.9316E-02  2.5973E-02  3.4923E-02  4.6957E-02  6.3139E-02  8.4896E-02  1.1415E-01  1.5349E-01  2.0638E-01  2.7750E-01
+   Eavg    1.6658E-02  2.2399E-02  3.0117E-02  4.0495E-02  5.4450E-02  7.3213E-02  9.8443E-02  1.3237E-01  1.7798E-01  2.3931E-01
+
+   Ebnd    3.7312E-01  5.0170E-01  6.7458E-01  9.0704E-01  1.2196E+00  1.6399E+00  2.2050E+00  2.9648E+00  3.9865E+00  5.3602E+00
+   Eavg    3.2178E-01  4.3266E-01  5.8175E-01  7.8222E-01  1.0518E+00  1.4142E+00  1.9015E+00  2.5568E+00  3.4379E+00  4.6226E+00
+
+   Ebnd    7.2073E+00  9.6909E+00  1.3030E+01  1.7521E+01  2.3558E+01  3.1676E+01  4.2592E+01  5.7269E+01  7.7004E+01  1.0354E+02
+   Eavg    6.2155E+00  8.3574E+00  1.1237E+01  1.5110E+01  2.0316E+01  2.7317E+01  3.6731E+01  4.9388E+01  6.6407E+01  8.9291E+01
+
+   Ebnd    1.3922E+02  1.8719E+02  2.5170E+02  3.3844E+02  4.5506E+02  6.1187E+02  8.2272E+02  1.1062E+03  1.4874E+03  2.0000E+03
+   Eavg    1.2006E+02  1.6143E+02  2.1706E+02  2.9186E+02  3.9244E+02  5.2767E+02  7.0951E+02  9.5400E+02  1.2827E+03  1.7248E+03
+
+
+ Maximum electron temperatures for cold opacities, by region:
+  1.0000E-02  1.0000E-02  1.0000E-02
+
+ Region opacity multipliers:
+  k       Free-free   Free-bound  Bound-bound
+  1     1.00000E+00  1.00000E+00  1.00000E+00
+  2     1.00000E+00  1.00000E+00  1.00000E+00
+  3     1.00000E+00  1.00000E+00  1.00000E+00
+
+
+ Thermonuclear burn regions:      1   3
+
+ Reaction #   Reaction             Sigma-Vbar multiplier
+     1        d(d,n)He-3           1.00000E+00
+     2        d(d,p)t              1.00000E+00
+     3        t(d,n)He-4           1.00000E+00
+     4        t(t,2n)He-4          1.00000E+00
+     5        He-3(n,p)t           1.00000E+00
+     6        He-3(d,p)He-4        1.00000E+00
+     7        He-3(t,d)He-4        1.00000E+00
+     8        He-3(t,np)He-4       1.00000E+00
+     9        He-3(He-3,2p)He-4    1.00000E+00
+
+ Particle   Group energy centers:
+   n         4.0800E+02  8.1600E+02  1.2240E+03  1.6320E+03  2.0400E+03  2.4480E+03  4.3810E+03  6.3140E+03  8.2470E+03  1.0180E+04
+             1.2113E+04  1.4046E+04
+   p         5.0365E+02  1.0073E+03  1.5110E+03  2.0146E+03  2.5183E+03  3.0219E+03  4.9615E+03  6.9011E+03  8.8407E+03  1.0780E+04
+             1.2720E+04  1.4660E+04
+   d         3.6317E+02  7.2633E+02  1.0895E+03  1.4527E+03  1.8158E+03  2.1790E+03  3.9908E+03  5.8027E+03  7.6145E+03  9.4263E+03
+             1.1238E+04  1.3050E+04
+   t         1.6830E+02  3.3660E+02  5.0490E+02  6.7320E+02  8.4150E+02  1.0098E+03  2.9315E+03  4.8532E+03  6.7749E+03  8.6966E+03
+             1.0618E+04  1.2540E+04
+   He-3      1.3645E+02  2.7290E+02  4.0935E+02  5.4580E+02  6.8225E+02  8.1870E+02  2.7723E+03  4.7258E+03  6.6794E+03  8.6329E+03
+             1.0586E+04  1.2540E+04
+   He-4      5.9017E+02  1.1803E+03  1.7705E+03  2.3607E+03  2.9508E+03  3.5410E+03  5.0008E+03  6.4607E+03  7.9205E+03  9.3803E+03
+             1.0840E+04  1.2300E+04
+
+
+ Regional Ionization Models:
+  k   Model   TEZMIN        TEZ0          C1           C2       C3
+  1     4   5.00000E-03  1.00000E-06
+  2     4   5.00000E-03  1.00000E-06
+  3     4   5.00000E-03  1.00000E-06
+
+
+ Regional Material Information:
+  k     Eos       Eosm(p)      Eosm(e)      Eosm(ek)     Eosm(ak)      Zavg         Aavg         Znuc         Anuc         Fract
+  1      11     1.00000E+00  1.00000E+00  1.00000E+00  1.00000E+00  1.00000E+00  2.50000E+00
+                                                                                              1.00000E+00  1.00783E+00  0.00000E+00
+                                                                                              1.00000E+00  2.00000E+00  5.00000E-01
+                                                                                              1.00000E+00  3.00000E+00  5.00000E-01
+                                                                                              2.00000E+00  3.01603E+00  0.00000E+00
+                                                                                              2.00000E+00  4.00260E+00  0.00000E+00
+  2     181     1.00000E+00  1.00000E+00  1.00000E+00  1.00000E+00  6.00000E+00  1.20000E+01
+                                                                                              6.00000E+00  1.20000E+01  1.00000E+00
+  3      11     1.00000E+00  1.00000E+00  1.00000E+00  1.00000E+00  1.00000E+00  2.50000E+00
+                                                                                              1.00000E+00  1.00783E+00  0.00000E+00
+                                                                                              1.00000E+00  2.00000E+00  5.00000E-01
+                                                                                              1.00000E+00  3.00000E+00  5.00000E-01
+                                                                                              2.00000E+00  3.01603E+00  0.00000E+00
+                                                                                              2.00000E+00  4.00260E+00  0.00000E+00
+
+
+ Table limits:
+      Number      Rhomin       Rhomax       Tempmin      Tempmax
+         11     0.00000E+00  4.37070E+03  0.00000E+00  3.18828E+01
+        181     0.00000E+00  1.57000E+05  0.00000E+00  3.19996E+01
+         11     0.00000E+00  4.37070E+03  0.00000E+00  3.18828E+01
+
+
+ Region EOS table extrapolation methods:
+         k   Rhomin  Rhomax  Tempmin  Tempmax
+         1     2       2        2        2
+         2     2       2        2        2
+         3     2       2        2        2
+
+
+ Initial Energies:
+  k        Kinetic     Electron        Ion      Ionization    Radiation    Magnetic        Sum
+  1      0.00000E+00  3.02976E+11  3.02993E+11               7.18419E+11  0.00000E+00  1.32439E+12
+  2      0.00000E+00  9.24409E+08  2.09794E+08               2.98531E+04  0.00000E+00  1.13423E+09
+  3      0.00000E+00  4.95808E+13  5.00718E+13               9.19431E+08  0.00000E+00  9.96535E+13
+ Sum     0.00000E+00  4.98847E+13  5.03750E+13  0.00000E+00  7.19338E+11  0.00000E+00  1.00979E+14
+
+
+ Initial Momentums:    Initial Masses:
+  k
+  1     0.00000E+00        5.23599E-05
+  2     0.00000E+00        1.35985E-05
+  3     0.00000E+00        4.18813E-01
+ Sum    0.00000E+00        4.18879E-01
+
+
+ No sources or leaks specified
+
+
+
+ Parameters:
+    Code Control
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          EDITDT    0.00000E+00          IEDCYC              0          LEDBURN             0          POSTDT    5.00000E-12
+          IPSCYC              0          NSTOP           10000          TSTOP     5.00000E-10          ITMCYC             10
+
+
+    Electron and Ion Conduction
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          LNLCND              0          CONDEM    1.00000E+00          CONDIM    1.00000E+00          EICPLM    1.00000E+00
+          EITAUM    1.00000E+00          EITAU2M   5.00000E+01          EITAU3M   7.40000E-01          ENEM      1.00000E+00
+          ENIM      1.00000E+00          FLXLEM    4.00000E-01          FLXLIM    4.00000E-01          PREM      1.00000E+00
+          PRIM      1.00000E+00          RNLRNG    5.00000E+00          TEMIN     1.00000E-04          TIMIN     1.00000E-04
+          XNLA      5.00000E+01
+
+
+    Hydrodynamics
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          ALVISM    2.00000E-01          AQVISM    2.00000E+00          CSMIN     1.00000E+03          GRMASS    0.00000E+00
+          JHTRMX             50          QSTIMX    5.00000E-04          REVISM    0.00000E+00          RIVISM    0.00000E+00
+
+
+    Material Strength
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          EDISIM    9.00000E-01          SPLSTFMN  1.00000E-01
+
+
+    Lasers
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          JLTPMX             30          XLAAM     0.00000E+00          XLCUTM    1.00000E-06          XLIBAM    1.00000E+00
+          XLNLBM    0.00000E+00          XLPDFM    0.00000E+00          XLRAM     0.00000E+00          XLRDSM    1.00000E+00
+          XLSDAM    1.00000E+00          XLTPDM    1.00000E+00          XLABTH    1.00000E+16          XLDUMP    0.00000E+00
+
+          IXLWBC              0          NLSPTS            500          XLWABTH   1.00000E+16          XLWBLDM   1.00000E+00
+          XLWCUTM   1.00000E-10          XLWEPSIM  1.00000E+00          XLWEPSRM  1.00000E+00          XLWGRES   5.00000E-02
+          XLWMESH   1.00000E-10          XLWPDFM   0.00000E+00          XLWIBTW   5.00000E+14          XLWOMM    1.00000E+00
+
+
+    Magnetic fields
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          IMAG                0          EBOHMM    0.00000E+00          OTAUEM    1.00000E+00          OTAUIM    1.00000E+00
+          XMDIFM    1.00000E+00          XMDMN     0.00000E+00          XMFLXM    1.00000E+00          XMNERNM   1.00000E+00
+          XMPRM     1.00000E+00          XMLINDM   1.00000E+00          XMLRESM   0.00000E+00
+
+
+    Radiation
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          IRDTRN              2          FLXLRM    6.50000E-01          RADABM    1.00000E+00          RADBRM    1.00000E+00
+          RADCMM    1.00000E+00          RADFBM    1.00000E+00          RADBBM    1.00000E+00          RADESM    1.00000E+00
+          RADDFM    1.00000E+00          PRRM      1.00000E+00          TRMIN     1.00000E-04          IRDKAP              0
+
+
+    Thermonuclear Burn
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          LBCPELS             0          LBCPINF             0          BCPDEPM   1.00000E+00          BCPDIFM   1.00000E+00
+          BCPESC    1.00000E+99          BCPFLXM   6.50000E-01          BCPOTAUM  1.00000E+00          BCPPRM    1.00000E+00
+          BNUESCM   1.00000E+00          TIBMN     2.00000E-01
+
+
+    Atomic Physics
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          LNLTE               0          NAPLVS              7          APCBBM    1.00000E+00          APCBFM    1.00000E+00
+          APCLWM    1.00000E+00          APDERM    0.00000E+00          APMNTE    5.00000E-02          APRBBM    1.00000E+00
+          APRBFM    1.00000E+00          APSSTE    5.00000E-02          APWIDM    1.00000E+00          LAPNSS              0
+          LAPTHK              1
+
+
+    Time Step Controls
+            Name      Value                Name      Value                Name      Value                Name      Value    
+          DT        1.00000E-29          DTAQM     1.00000E+00          DTCURM    1.00000E+00          DTFRCM    1.00000E-01
+          DTMIN     1.00000E-30          DTMAX     1.00000E-09          DTMGM     1.00000E-01          DTMGMN    1.00000E+04
+          DTPRSM    1.00000E-01          DTTEM     1.00000E-01          DTTEMN    5.00000E-04          DTTIM     1.00000E-01
+          DTTIMN    5.00000E-04          DTTRM     1.00000E-01          DTTRMN    5.00000E-04          DTVOLM    1.00000E-01
+          IALTDT              0
+
+
+
+ Post processor dump written at cycle         0 at time  0.0000000E+00
+
+ Post processor dump written at cycle       540 at time  5.0385516E-12
+
+ Post processor dump written at cycle       568 at time  1.0031639E-11
+
+ Post processor dump written at cycle       592 at time  1.5151859E-11
+
+ Post processor dump written at cycle       613 at time  2.0030061E-11
+
+ Post processor dump written at cycle       633 at time  2.5126261E-11
+
+ Post processor dump written at cycle       651 at time  3.0206251E-11
+
+ Post processor dump written at cycle       668 at time  3.5022253E-11
+
+ Post processor dump written at cycle       686 at time  4.0191305E-11
+
+ Post processor dump written at cycle       703 at time  4.5156700E-11
+
+ Post processor dump written at cycle       720 at time  5.0231289E-11
+
+ Post processor dump written at cycle       736 at time  5.5128187E-11
+
+ Post processor dump written at cycle       752 at time  6.0159781E-11
+
+ Post processor dump written at cycle       767 at time  6.5020558E-11
+
+ Post processor dump written at cycle       782 at time  7.0039977E-11
+
+ Post processor dump written at cycle       797 at time  7.5236058E-11
+
+ Post processor dump written at cycle       811 at time  8.0264579E-11
+
+ Post processor dump written at cycle       824 at time  8.5100581E-11
+
+ Post processor dump written at cycle       837 at time  9.0114787E-11
+
+ Post processor dump written at cycle       850 at time  9.5318992E-11
+
+ Post processor dump written at cycle       862 at time  1.0030783E-10
+
+ Post processor dump written at cycle       873 at time  1.0505049E-10
+
+ Post processor dump written at cycle       885 at time  1.1042159E-10
+
+ Post processor dump written at cycle       895 at time  1.1506870E-10
+
+ Post processor dump written at cycle       906 at time  1.2037183E-10
+
+ Post processor dump written at cycle       916 at time  1.2537476E-10
+
+ Post processor dump written at cycle       925 at time  1.3003674E-10
+
+ Post processor dump written at cycle       935 at time  1.3540710E-10
+
+ Post processor dump written at cycle       944 at time  1.4041762E-10
+
+ Post processor dump written at cycle       952 at time  1.4501664E-10
+
+ Post processor dump written at cycle       961 at time  1.5036524E-10
+
+ Post processor dump written at cycle       969 at time  1.5528657E-10
+
+ Post processor dump written at cycle       977 at time  1.6037037E-10
+
+ Post processor dump written at cycle       985 at time  1.6561652E-10
+
+ Post processor dump written at cycle       992 at time  1.7034232E-10
+
+ Post processor dump written at cycle       999 at time  1.7520206E-10
+
+ Post processor dump written at cycle      1006 at time  1.8020575E-10
+
+ Post processor dump written at cycle      1013 at time  1.8535994E-10
+
+ Post processor dump written at cycle      1020 at time  1.9066361E-10
+
+ Post processor dump written at cycle      1026 at time  1.9532515E-10
+
+ Post processor dump written at cycle      1032 at time  2.0009262E-10
+
+ Post processor dump written at cycle      1039 at time  2.0579447E-10
+
+ Post processor dump written at cycle      1045 at time  2.1081075E-10
+
+ Post processor dump written at cycle      1050 at time  2.1508731E-10
+
+ Post processor dump written at cycle      1056 at time  2.2033608E-10
+
+ Post processor dump written at cycle      1062 at time  2.2570730E-10
+
+ Post processor dump written at cycle      1067 at time  2.3027030E-10
+
+ Post processor dump written at cycle      1073 at time  2.3584442E-10
+
+ Post processor dump written at cycle      1078 at time  2.4057185E-10
+
+ Post processor dump written at cycle      1083 at time  2.4537905E-10
+
+ Post processor dump written at cycle      1088 at time  2.5027263E-10
+
+ Post processor dump written at cycle      1093 at time  2.5525800E-10
+
+ Post processor dump written at cycle      1098 at time  2.6033640E-10
+
+ Post processor dump written at cycle      1103 at time  2.6550330E-10
+
+ Post processor dump written at cycle      1108 at time  2.7074959E-10
+
+ Post processor dump written at cycle      1113 at time  2.7606449E-10
+
+ Post processor dump written at cycle      1117 at time  2.8036016E-10
+
+ Post processor dump written at cycle      1122 at time  2.8578202E-10
+
+ Post processor dump written at cycle      1126 at time  2.9016326E-10
+
+ Post processor dump written at cycle      1131 at time  2.9570007E-10
+
+ Post processor dump written at cycle      1135 at time  3.0018204E-10
+
+ Post processor dump written at cycle      1140 at time  3.0585342E-10
+
+ Post processor dump written at cycle      1144 at time  3.1044442E-10
+
+ Post processor dump written at cycle      1148 at time  3.1507840E-10
+
+ Post processor dump written at cycle      1153 at time  3.2091918E-10
+
+ Post processor dump written at cycle      1157 at time  3.2561843E-10
+
+ Post processor dump written at cycle      1161 at time  3.3033062E-10
+
+ Post processor dump written at cycle      1165 at time  3.3504794E-10
+
+ Post processor dump written at cycle      1170 at time  3.4094497E-10
+
+ Post processor dump written at cycle      1174 at time  3.4566153E-10
+
+ Post processor dump written at cycle      1178 at time  3.5037809E-10
+
+ Post processor dump written at cycle      1182 at time  3.5509552E-10
+
+ Post processor dump written at cycle      1187 at time  3.6099159E-10
+
+ Post processor dump written at cycle      1191 at time  3.6570281E-10
+
+ Post processor dump written at cycle      1195 at time  3.7040134E-10
+
+ Post processor dump written at cycle      1199 at time  3.7507820E-10
+
+ Post processor dump written at cycle      1204 at time  3.8087959E-10
+
+ Post processor dump written at cycle      1208 at time  3.8547535E-10
+
+ Post processor dump written at cycle      1212 at time  3.9002474E-10
+
+ Post processor dump written at cycle      1217 at time  3.9564353E-10
+
+ Post processor dump written at cycle      1221 at time  4.0008692E-10
+
+ Post processor dump written at cycle      1226 at time  4.0558570E-10
+
+ Post processor dump written at cycle      1231 at time  4.1103827E-10
+
+ Post processor dump written at cycle      1235 at time  4.1537915E-10
+
+ Post processor dump written at cycle      1240 at time  4.2079304E-10
+
+ Post processor dump written at cycle      1244 at time  4.2512298E-10
+
+ Post processor dump written at cycle      1249 at time  4.3054141E-10
+
+ Post processor dump written at cycle      1254 at time  4.3596930E-10
+
+ Post processor dump written at cycle      1258 at time  4.4031740E-10
+
+ Post processor dump written at cycle      1263 at time  4.4575659E-10
+
+ Post processor dump written at cycle      1267 at time  4.5010792E-10
+
+ Post processor dump written at cycle      1272 at time  4.5554219E-10
+
+ Post processor dump written at cycle      1277 at time  4.6096749E-10
+
+ Post processor dump written at cycle      1281 at time  4.6530282E-10
+
+ Post processor dump written at cycle      1286 at time  4.7072191E-10
+
+ Post processor dump written at cycle      1290 at time  4.7506382E-10
+
+ Post processor dump written at cycle      1295 at time  4.8051022E-10
+
+ Post processor dump written at cycle      1300 at time  4.8599052E-10
+
+ Post processor dump written at cycle      1304 at time  4.9040597E-10
+
+ Post processor dump written at cycle      1309 at time  4.9597002E-10
+
+ test_T_10_1_2                    17Apr23  15:04:31  Time = 5.0000000E-10  Cycl =      1313  Dt = 6.6627006E-13  Cntl: C  Zone:   15
+
+
+   j  k       MeshPos         MeshVel      Density      Pressure     VisEnrgy     ElecTemp     IonTemp      RadTemp        Zbar   
+   1  1  0.00000000000E+00  0.00000E+00  2.04825E+01  1.48657E+16  1.79878E+12  9.38997E-01  9.41022E-01  6.70857E-01  9.98128E-01
+   2  1  8.40559634413E-04 -1.46436E+05  2.05437E+01  1.48374E+16  1.88687E+12  9.34487E-01  9.36429E-01  6.70178E-01  9.98115E-01
+   3  1  1.67989477118E-03 -2.97930E+05  2.06934E+01  1.48044E+16  2.41207E+12  9.25801E-01  9.27620E-01  6.69084E-01  9.98088E-01
+   4  1  2.51605672947E-03 -4.70732E+05  2.09620E+01  1.48037E+16  9.02580E+12  9.14076E-01  9.15763E-01  6.67561E-01  9.98052E-01
+   5  1  3.34637527175E-03 -6.65626E+05  2.13493E+01  1.48248E+16  8.85431E+12  8.99018E-01  9.00547E-01  6.65580E-01  9.98003E-01
+   6  1  4.16854628010E-03 -8.37781E+05  2.18383E+01  1.48416E+16  2.63490E+12  8.80192E-01  8.81532E-01  6.63114E-01  9.97940E-01
+   7  1  4.98103853148E-03 -9.06206E+05  2.23898E+01  1.48175E+16  0.00000E+00  8.57501E-01  8.58624E-01  6.60160E-01  9.97859E-01
+   8  1  5.78361865161E-03 -8.67566E+05  2.29805E+01  1.47246E+16  0.00000E+00  8.30680E-01  8.31556E-01  6.56717E-01  9.97757E-01
+   9  1  6.57654301930E-03 -6.77183E+05  2.37397E+01  1.46363E+16  0.00000E+00  7.99846E-01  8.00491E-01  6.52896E-01  9.97630E-01
+  10  1  7.35605842442E-03 -4.56389E+05  2.54006E+01  1.48287E+16  0.00000E+00  7.58166E-01  7.58728E-01  6.48726E-01  9.97438E-01
+ 
+  11  2  8.09981677645E-03 -3.63392E+05  7.02819E+01  1.48530E+16  0.00000E+00  6.37431E-01  6.37442E-01  6.09500E-01  5.51249E+00
+  12  2  8.14365147881E-03 -3.35301E+05  7.48362E+01  1.48553E+16  0.00000E+00  6.07454E-01  6.07469E-01  5.90994E-01  5.46071E+00
+  13  2  8.18569012527E-03 -3.02215E+05  7.92210E+01  1.48619E+16  0.00000E+00  5.81545E-01  5.81559E-01  5.72126E-01  5.41113E+00
+  14  2  8.22624139170E-03 -2.64935E+05  8.40336E+01  1.48695E+16  0.00000E+00  5.55919E-01  5.55934E-01  5.50911E-01  5.35756E+00
+  15  2  8.26527610383E-03 -2.25053E+05  8.93483E+01  1.48839E+16  0.00000E+00  5.30268E-01  5.30276E-01  5.24973E-01  5.29923E+00
+ 
+  16  3  8.30276120627E-03 -1.84416E+05  3.66062E+01  1.48936E+16  0.00000E+00  5.33274E-01  5.33390E-01  5.10371E-01  9.95820E-01
+  17  3  8.36160407933E-03 -1.15480E+05  3.66063E+01  1.49069E+16  0.00000E+00  5.33747E-01  5.33847E-01  5.09963E-01  9.95824E-01
+  18  3  8.42664660728E-03 -4.28993E+04  3.66223E+01  1.49225E+16  0.00000E+00  5.34066E-01  5.34171E-01  5.09500E-01  9.95828E-01
+  19  3  8.49846384678E-03  3.27549E+04  3.66649E+01  1.49431E+16  0.00000E+00  5.34185E-01  5.34294E-01  5.08970E-01  9.95829E-01
+  20  3  8.57767780464E-03  1.09173E+05  3.67424E+01  1.49701E+16  0.00000E+00  5.34036E-01  5.34146E-01  5.08356E-01  9.95828E-01
+  21  3  8.66496263445E-03  1.82391E+05  3.68622E+01  1.50053E+16  0.00000E+00  5.33577E-01  5.33685E-01  5.07632E-01  9.95823E-01
+  22  3  8.76105814927E-03  2.46094E+05  3.70311E+01  1.50504E+16  0.00000E+00  5.32781E-01  5.32887E-01  5.06768E-01  9.95815E-01
+  23  3  8.86677974392E-03  2.93208E+05  3.72534E+01  1.51058E+16  0.00000E+00  5.31602E-01  5.31708E-01  5.05725E-01  9.95803E-01
+  24  3  8.98302321955E-03  3.17833E+05  3.75297E+01  1.51687E+16  8.47917E+10  5.29956E-01  5.30062E-01  5.04466E-01  9.95786E-01
+  25  3  9.11076922290E-03  3.16953E+05  3.78526E+01  1.52316E+16  1.58250E+12  5.27701E-01  5.27806E-01  5.02949E-01  9.95763E-01
+  26  3  9.25110881147E-03  2.90381E+05  3.82181E+01  1.52867E+16  2.91560E+12  5.24650E-01  5.24752E-01  5.01066E-01  9.95731E-01
+  27  3  9.40524072283E-03  2.43405E+05  3.86189E+01  1.53230E+16  3.15374E+12  5.20563E-01  5.20661E-01  4.98691E-01  9.95687E-01
+  28  3  9.57449809598E-03  1.90243E+05  3.90517E+01  1.53311E+16  2.01832E+12  5.15217E-01  5.15308E-01  4.95715E-01  9.95629E-01
+  29  3  9.76035261899E-03  1.49095E+05  3.94936E+01  1.52892E+16  3.26117E+09  5.08237E-01  5.08316E-01  4.91977E-01  9.95550E-01
+  30  3  9.96453258589E-03  1.51461E+05  3.99121E+01  1.51762E+16  0.00000E+00  4.99380E-01  4.99445E-01  4.87351E-01  9.95445E-01
+  31  3  1.01891264971E-02  1.91942E+05  4.02925E+01  1.49805E+16  0.00000E+00  4.88467E-01  4.88516E-01  4.81695E-01  9.95309E-01
+  32  3  1.04365502737E-02  2.07781E+05  4.06140E+01  1.46846E+16  2.40657E+12  4.75212E-01  4.75242E-01  4.74776E-01  9.95131E-01
+  33  3  1.07096389550E-02  8.78375E+04  4.09404E+01  1.43208E+16  1.81014E+13  4.59946E-01  4.59957E-01  4.66620E-01  9.94913E-01
+  34  3  1.10111141693E-02 -2.48386E+05  4.14224E+01  1.39617E+16  3.52209E+13  4.43415E-01  4.43412E-01  4.57397E-01  9.94661E-01
+  35  3  1.13427963622E-02 -7.17139E+05  4.22617E+01  1.37009E+16  2.58530E+13  4.26719E-01  4.26709E-01  4.47390E-01  9.94392E-01
+  36  3  1.17048928045E-02 -1.11157E+06  4.33646E+01  1.34739E+16  6.38612E+11  4.09196E-01  4.09180E-01  4.36324E-01  9.94093E-01
+  37  3  1.20983246189E-02 -1.17090E+06  4.44823E+01  1.31670E+16  0.00000E+00  3.90036E-01  3.90012E-01  4.24037E-01  9.93735E-01
+  38  3  1.25263982798E-02 -8.32150E+05  4.59937E+01  1.29825E+16  0.00000E+00  3.72078E-01  3.72052E-01  4.11533E-01  9.93372E-01
+  39  3  1.29890601848E-02 -5.15512E+05  4.85957E+01  1.32031E+16  0.00000E+00  3.58194E-01  3.58173E-01  3.99455E-01  9.93099E-01
+  40  3  1.34795111826E-02 -4.42696E+05  5.22689E+01  1.37473E+16  0.00000E+00  3.46651E-01  3.46637E-01  3.87147E-01  9.92899E-01
+  41  3  1.39920230333E-02 -1.69338E+05  5.55221E+01  1.39583E+16  0.00000E+00  3.31159E-01  3.31146E-01  3.73119E-01  9.92582E-01
+  42  3  1.45361822809E-02  6.32159E+05  5.88716E+01  1.41160E+16  0.00000E+00  3.15501E-01  3.15488E-01  3.58531E-01  9.92240E-01
+  43  3  1.51165359861E-02  1.19065E+06  6.47021E+01  1.51441E+16  0.00000E+00  3.07269E-01  3.07262E-01  3.45733E-01  9.92172E-01
+  44  3  1.57159466233E-02  1.39071E+06  7.06911E+01  1.60913E+16  0.00000E+00  2.97883E-01  2.97877E-01  3.32680E-01  9.92092E-01
+  45  3  1.63415248219E-02  2.36751E+06  7.53727E+01  1.65018E+16  0.00000E+00  2.85450E-01  2.85444E-01  3.19090E-01  9.91880E-01
+  46  3  1.70125132508E-02  3.12586E+06  8.42981E+01  1.84437E+16  0.00000E+00  2.83657E-01  2.83655E-01  3.09566E-01  9.92112E-01
+  47  3  1.77011189640E-02  3.44765E+06  9.14528E+01  1.97034E+16  0.00000E+00  2.77674E-01  2.77672E-01  2.99499E-01  9.92183E-01
+  48  3  1.84324522658E-02  4.82739E+06  9.93814E+01  2.13108E+16  0.00000E+00  2.74622E-01  2.74620E-01  2.92008E-01  9.92341E-01
+  49  3  1.92096980017E-02  5.11219E+06  1.11301E+02  2.44104E+16  0.00000E+00  2.78844E-01  2.78843E-01  2.90363E-01  9.93216E-01
+  50  3  2.00139122731E-02  6.48844E+06  1.18327E+02  2.58628E+16  0.00000E+00  2.76248E-01  2.76247E-01  2.85759E-01  9.93336E-01
+  51  3  2.08922482221E-02  6.96146E+06  1.34369E+02  3.08089E+16  0.00000E+00  2.87776E-01  2.87776E-01  2.91941E-01  9.93919E-01
+  52  3  2.17925343385E-02  8.56543E+06  1.39123E+02  3.17025E+16  1.27150E+15  2.84703E-01  2.84704E-01  2.87004E-01  9.93955E-01
+  53  3  2.28054238806E-02  7.31324E+06  1.25310E+02  2.57932E+16  4.27437E+15  2.56619E-01  2.56624E-01  2.60234E-01  9.93114E-01
+  54  3  2.41021772214E-02  4.66492E+06  1.11336E+02  2.05175E+16  3.74792E+15  2.29344E-01  2.29348E-01  2.33296E-01  9.92067E-01
+  55  3  2.57552295300E-02  1.99724E+06  1.03167E+02  1.77431E+16  1.06387E+15  2.13804E-01  2.13805E-01  2.17099E-01  9.90787E-01
+  56  3  2.77434963009E-02  5.65578E+05  1.00715E+02  1.68941E+16  7.49138E+13  2.08310E-01  2.08310E-01  2.10695E-01  9.90501E-01
+  57  3  2.99936827311E-02  2.51527E+05  1.00333E+02  1.66772E+16  9.52966E+12  2.06195E-01  2.06195E-01  2.07876E-01  9.90415E-01
+  58  3  3.24825098705E-02  1.68770E+05  1.00213E+02  1.65590E+16  4.52538E+12  2.04798E-01  2.04798E-01  2.05999E-01  9.90364E-01
+  59  3  3.52262507185E-02  1.18308E+05  1.00132E+02  1.64716E+16  2.74923E+12  2.03741E-01  2.03741E-01  2.04601E-01  9.90325E-01
+  60  3  3.82487980766E-02  8.29849E+04  1.00078E+02  1.64057E+16  1.64526E+12  2.02926E-01  2.02926E-01  2.03539E-01  9.90296E-01
+  61  3  4.15768204512E-02  5.86448E+04  1.00047E+02  1.63565E+16  9.69692E+11  2.02290E-01  2.02290E-01  2.02724E-01  9.90274E-01
+  62  3  4.52397569442E-02  4.20493E+04  1.00031E+02  1.63193E+16  6.00677E+11  2.01791E-01  2.01791E-01  2.02096E-01  9.90256E-01
+  63  3  4.92703753164E-02  3.03536E+04  1.00020E+02  1.62903E+16  3.90121E+11  2.01396E-01  2.01396E-01  2.01609E-01  9.90243E-01
+  64  3  5.37050383810E-02  2.18930E+04  1.00014E+02  1.62677E+16  2.57318E+11  2.01083E-01  2.01083E-01  2.01231E-01  9.90232E-01
+  65  3  5.85838900784E-02  1.57429E+04  1.00009E+02  1.62500E+16  1.70280E+11  2.00837E-01  2.00837E-01  2.00938E-01  9.90224E-01
+  66  3  6.39511605507E-02  1.12876E+04  1.00006E+02  1.62362E+16  1.16892E+11  2.00643E-01  2.00643E-01  2.00712E-01  9.90217E-01
+  67  3  6.98555595481E-02  8.24186E+03  9.99974E+01  1.62236E+16  0.00000E+00  2.00482E-01  2.00482E-01  2.00528E-01  9.90211E-01
+  68  3  7.63510645694E-02  1.17506E+04  9.97998E+01  1.61618E+16  0.00000E+00  2.00103E-01  2.00103E-01  2.00126E-01  9.90189E-01
+  69  3  8.35091417301E-02  1.53547E+05  9.61667E+01  1.51806E+16  0.00000E+00  1.95169E-01  1.95169E-01  1.95179E-01  9.89822E-01
+  70  3  9.16526294319E-02  2.03933E+06  6.53663E+01  7.92003E+15  0.00000E+00  1.50857E-01  1.50857E-01  1.50969E-01  9.85111E-01
+  71     1.04261826912E-01  1.53294E+07                                                                                           
+
+
+ Regional Averages:
+   k     Mass          Vol          Rho         Dene          Te           Ti           Tr          Zbar
+   1  5.18721E-05  2.22594E-06  2.33034E+01  5.65317E+24  8.22157E-01  8.23057E-01  6.56457E-01  9.97708E-01
+   2  1.35985E-05  1.71543E-07  7.92715E+01  2.15017E+25  5.81408E-01  5.80901E-01  5.73172E-01  5.40496E+00
+   3  4.18813E-01  4.74510E-03  8.82623E+01  2.10266E+25  1.89425E-01  1.89373E-01  1.93210E-01  9.88988E-01
+
+
+ Regional Radiation Energy Densities:
+   k         Grp1        Grp2        Grp3        Grp4        Grp5        Grp6        Grp7        Grp8        Grp9       Grp10
+   1      5.8172E+06  2.4126E+07  4.3607E+07  7.8813E+07  1.4243E+08  2.5734E+08  4.6489E+08  8.3958E+08  1.5157E+09  2.7349E+09
+          4.9314E+09  8.8839E+09  1.5984E+10  2.8712E+10  5.1458E+10  9.1941E+10  1.6360E+11  2.8947E+11  5.0827E+11  8.8318E+11
+          1.5126E+12  2.5394E+12  4.1447E+12  6.4903E+12  9.4782E+12  1.1923E+13  1.0924E+13  6.6429E+12  2.3952E+12  6.1835E+11
+          9.0384E+10  6.4654E+09  2.1828E+08  2.6168E+06  7.9237E+03  7.7684E+00  5.7424E-03  6.2571E-06  7.9939E-09  1.0460E-11
+          1.3649E-14  1.7717E-17  2.3075E-20  3.0996E-23  4.7773E-26  7.6060E-24  1.8032E-16  3.0920E-12  1.9165E-10  5.6937E-10
+
+   2      4.1174E+06  1.7074E+07  3.0859E+07  5.5767E+07  1.0076E+08  1.8202E+08  3.2871E+08  5.9337E+08  1.0706E+09  1.9302E+09
+          3.4766E+09  6.2539E+09  1.1230E+10  2.0118E+10  3.5924E+10  6.3870E+10  1.1289E+11  1.9792E+11  3.4320E+11  5.8613E+11
+          9.8015E+11  1.5915E+12  2.4788E+12  3.6395E+12  4.9151E+12  5.9080E+12  5.9062E+12  4.2634E+12  1.7952E+12  4.4577E+11
+          5.9528E+10  3.7747E+09  1.1530E+08  1.3623E+06  4.2866E+03  5.6405E+00  5.3733E-03  6.1402E-06  7.8892E-09  1.0333E-11
+          1.3487E-14  1.7509E-17  2.2808E-20  3.0647E-23  4.7312E-26  7.5975E-24  1.8010E-16  3.0881E-12  1.9140E-10  5.6858E-10
+
+   3      1.3041E+06  5.4034E+06  9.7582E+06  1.7616E+07  3.1785E+07  5.7311E+07  1.0324E+08  1.8574E+08  3.3360E+08  5.9781E+08
+          1.0680E+09  1.8999E+09  3.3607E+09  5.8988E+09  1.0245E+10  1.7535E+10  2.9415E+10  4.7980E+10  7.5238E+10  1.1159E+11
+          1.5288E+11  1.8710E+11  1.9524E+11  1.6340E+11  1.0190E+11  4.4078E+10  1.3356E+10  4.4348E+09  2.4361E+09  8.9910E+08
+          2.0851E+08  2.2439E+07  8.7942E+05  1.3044E+04  6.7828E+01  1.5032E-01  2.4860E-04  3.7275E-07  5.2867E-10  7.2486E-13
+          9.8065E-16  1.3394E-18  1.9209E-21  3.1508E-24  6.9794E-27  2.7361E-24  5.7757E-17  9.2589E-13  5.4289E-11  1.5535E-10
+
+
+
+ Nuclear Reactions:
+                 Region:
+ TN Reaction               1          2          3        Sum
+  d(d,n)He-3           3.559E+14  0.000E+00  1.158E+13  3.674E+14
+  d(d,p)t              3.404E+14  0.000E+00  1.158E+13  3.520E+14
+  t(d,n)He-4           1.246E+17  0.000E+00  2.092E+15  1.266E+17
+  t(t,2n)He-4          2.176E+14  0.000E+00  3.475E+12  2.211E+14
+  He-3(n,p)t           2.662E+08  0.000E+00  1.676E+05  2.664E+08
+  He-3(d,p)He-4        4.775E+09  0.000E+00  8.885E+04  4.775E+09
+  He-3(t,d)He-4        9.543E+07  0.000E+00  1.173E+03  9.543E+07
+  He-3(t,np)He-4       1.359E+08  0.000E+00  1.662E+03  1.359E+08
+  He-3(He-3,2p)He-4    1.523E+00  0.000E+00  2.065E-09  1.523E+00
+
+
+ Nuclear Reaction Rates:
+                 Region:
+ TN Reaction               1          2          3        Sum
+  d(d,n)He-3           2.755E+20  0.000E+00  2.029E+20  4.784E+20
+  d(d,p)t              2.786E+20  0.000E+00  2.068E+20  4.854E+20
+  t(d,n)He-4           3.462E+22  0.000E+00  1.419E+22  4.881E+22
+  t(t,2n)He-4          4.484E+19  0.000E+00  1.043E+19  5.527E+19
+  He-3(n,p)t           5.439E+17  0.000E+00  2.721E+14  5.441E+17
+  He-3(d,p)He-4        6.547E+12  0.000E+00  1.097E+09  6.548E+12
+  He-3(t,d)He-4        4.413E+10  0.000E+00  4.721E+06  4.413E+10
+  He-3(t,np)He-4       6.241E+10  0.000E+00  6.674E+06  6.242E+10
+  He-3(He-3,2p)He-4    1.749E-02  0.000E+00  6.067E-10  1.749E-02
+
+
+ Thermal particles:
+                 Region:
+      Particle             1          2          3        Sum
+          n            2.633E+12  0.000E+00  4.206E+10  2.675E+12
+          p            6.800E+13  6.824E+17  2.434E+14  6.827E+17
+          d            6.180E+18  0.000E+00  5.044E+22  5.045E+22
+          t            6.181E+18  0.000E+00  5.044E+22  5.045E+22
+          He-3         3.468E+14  0.000E+00  1.058E+13  3.573E+14
+          He-4         8.279E+16  0.000E+00  2.547E+16  1.083E+17
+
+
+ Athermal particles:
+                 Region:
+      Particle             1          2          3        Sum
+          n            0.000E+00  0.000E+00  0.000E+00  0.000E+00
+          p            5.657E+08  1.259E+07  7.536E+07  6.536E+08
+          d            1.799E-01  4.655E-03  9.354E-03  1.939E-01
+          t            1.080E+09  1.953E+07  1.387E+08  1.238E+09
+          He-3         2.635E+08  4.881E+05  3.198E+07  2.959E+08
+          He-4         5.878E+10  5.786E+08  4.622E+09  6.399E+10
+
+
+ Particle              Produced    Collisions   Thermalized   Escaped      Present       Error
+     n                 1.275E+17    0.000E+00   -2.676E+12   -1.275E+17    0.000E+00    3.264E+03
+     p                 3.520E+14    0.000E+00   -3.644E+14   -4.464E+05    6.536E+08    1.246E+13
+     d                 9.543E+07    0.000E+00   -9.646E+07   -3.350E-17    1.939E-01    1.028E+06
+     t                 3.520E+14    0.000E+00   -3.914E+14   -3.192E+05    1.238E+09    3.943E+13
+     He-3              3.674E+14    0.000E+00   -3.789E+14   -1.521E+04    2.959E+08    1.151E+13
+     He-4              1.269E+17    0.000E+00   -1.351E+17   -5.859E+06    6.399E+10    8.197E+15
+
+
+ Particle spectra                    Region:
+     p       Group    Energy     Escaped       1          2          3  
+                1    5.037E+02  3.300E+05  3.750E+08  1.052E+07  5.573E+07
+                2    1.007E+03  5.581E+04  7.190E+07  1.283E+06  7.582E+06
+                3    1.511E+03  2.981E+04  4.317E+07  4.894E+05  4.418E+06
+                4    2.015E+03  1.724E+04  3.114E+07  2.035E+05  3.149E+06
+                5    2.518E+03  9.465E+03  2.441E+07  7.688E+04  2.458E+06
+                6    3.022E+03  4.053E+03  2.006E+07  2.021E+04  2.019E+06
+                7    4.962E+03  1.820E+01  2.144E+04  1.400E+02  2.188E+03
+                8    6.901E+03  1.470E-15  8.776E-01  6.511E-03  2.561E-03
+                9    8.841E+03  9.497E-16  6.721E-01  3.266E-03  6.509E-04
+               10    1.078E+04  6.029E-16  5.450E-01  1.589E-03  1.553E-04
+               11    1.272E+04  3.504E-16  4.584E-01  6.693E-04  4.439E-05
+               12    1.466E+04  1.559E-16  3.951E-01  1.916E-04  2.461E-05
+  
+     d       Group    Energy     Escaped       1          2          3  
+                1    3.632E+02  1.190E-17  7.254E-02  3.083E-03  7.319E-03
+                2    7.263E+02  3.825E-18  1.994E-02  5.448E-04  9.120E-04
+                3    1.089E+03  2.628E-18  1.240E-02  2.717E-04  3.920E-04
+                4    1.453E+03  2.030E-18  9.142E-03  1.691E-04  2.155E-04
+                5    1.816E+03  1.654E-18  7.288E-03  1.167E-04  1.332E-04
+                6    2.179E+03  1.390E-18  6.082E-03  8.547E-05  8.844E-05
+                7    3.991E+03  5.255E-18  2.053E-02  2.551E-04  2.425E-04
+                8    5.803E+03  2.741E-18  1.349E-02  8.809E-05  4.285E-05
+                9    7.614E+03  1.440E-18  1.007E-02  3.219E-05  7.135E-06
+               10    9.426E+03  6.124E-19  8.015E-03  8.921E-06  9.699E-07
+               11    1.124E+04  2.637E-20  3.658E-04  3.192E-07  2.825E-08
+               12    1.305E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+  
+     t       Group    Energy     Escaped       1          2          3  
+                1    1.683E+02  2.037E+05  5.210E+08  1.354E+07  8.061E+07
+                2    3.366E+02  5.535E+04  2.070E+08  3.668E+06  2.225E+07
+                3    5.049E+02  2.959E+04  1.273E+08  1.433E+06  1.312E+07
+                4    6.732E+02  1.713E+04  9.241E+07  5.991E+05  9.382E+06
+                5    8.415E+02  9.411E+03  7.261E+07  2.268E+05  7.332E+06
+                6    1.010E+03  4.032E+03  5.973E+07  5.966E+04  6.028E+06
+                7    2.932E+03  4.016E+01  4.007E+04  6.914E+02  4.837E+03
+                8    4.853E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+                9    6.775E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               10    8.697E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               11    1.062E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               12    1.254E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+  
+     He-3    Group    Energy     Escaped       1          2          3  
+                1    1.365E+02  9.462E+03  1.227E+08  3.613E+05  1.761E+07
+                2    2.729E+02  2.752E+03  5.274E+07  8.447E+04  5.479E+06
+                3    4.094E+02  1.471E+03  3.211E+07  2.767E+04  3.264E+06
+                4    5.458E+02  8.511E+02  2.307E+07  1.020E+04  2.330E+06
+                5    6.823E+02  4.677E+02  1.800E+07  3.519E+03  1.813E+06
+                6    8.187E+02  2.006E+02  1.475E+07  8.763E+02  1.484E+06
+                7    2.772E+03  6.739E+00  2.785E+04  1.186E+02  2.802E+03
+                8    4.726E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+                9    6.679E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               10    8.633E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               11    1.059E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               12    1.254E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+  
+     He-4    Group    Energy     Escaped       1          2          3  
+                1    5.902E+02  4.069E+06  3.468E+10  4.808E+08  2.981E+09
+                2    1.180E+03  8.583E+05  9.211E+09  6.406E+07  6.293E+08
+                3    1.770E+03  4.586E+05  5.469E+09  2.173E+07  3.712E+08
+                4    2.361E+03  2.652E+05  3.905E+09  8.339E+06  2.649E+08
+                5    2.951E+03  1.456E+05  3.039E+09  2.949E+06  2.064E+08
+                6    3.541E+03  6.226E+04  2.484E+09  7.364E+05  1.690E+08
+                7    5.001E+03  3.164E-01  1.260E+04  1.481E+01  5.960E+02
+                8    6.461E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+                9    7.920E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               10    9.380E+03  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               11    1.084E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+               12    1.230E+04  0.000E+00  0.000E+00  0.000E+00  0.000E+00
+  
+
+ TD neutron spectrum:
+            Energy       Number
+           4.497E+02    1.503-132
+           1.128E+03    1.523E-49
+           1.580E+03    7.553E-21
+           1.882E+03    7.773E-08
+           2.083E+03    4.194E-01
+           2.217E+03    5.416E+03
+           2.306E+03    4.250E+06
+           2.366E+03    3.976E+08
+           2.406E+03    5.501E+09
+           2.432E+03    2.176E+10
+           2.450E+03    4.241E+10
+           2.467E+03    6.582E+10
+           2.494E+03    9.588E+10
+           2.533E+03    1.203E+11
+           2.593E+03    1.406E+11
+           2.682E+03    2.291E+11
+           2.816E+03    5.034E+11
+           3.017E+03    7.730E+11
+           3.319E+03    1.242E+11
+           3.771E+03    1.628E+07
+           4.450E+03    3.587E-04
+
+               FWHM =  3.578E+02 keV; T =  4.082E+00 keV
+
+
+ Regional Energy Content:
+   i     Ekin         Eelc         Eion         Erad         Emag         Ebp          Etot         Einit
+   1  1.13975E+07  2.46788E+10  2.47627E+10  5.67176E+07  0.00000E+00  1.10556E+05  4.95097E+10  1.32439E+12
+   2  5.45902E+05  3.79827E+09  7.01857E+08  2.54034E+06  0.00000E+00  7.07838E+02  4.50322E+09  1.13423E+09
+   3  6.14012E+12  4.67981E+13  4.73063E+13  9.07289E+08  0.00000E+00  8.18487E+03  1.00245E+14  9.96535E+13
+
+
+ Boundary Radiative Emission:
+
+     Outside (right) boundary:
+             Grp1        Grp2        Grp3        Grp4        Grp5        Grp6        Grp7        Grp8        Grp9       Grp10
+  Power   8.1773E+14  3.3933E+15  6.1297E+15  1.1031E+16  1.9895E+16  3.5852E+16  6.4534E+16  1.1599E+17  2.0808E+17  3.7233E+17
+          6.6266E+17  1.1698E+18  2.0559E+18  3.5771E+18  6.1237E+18  1.0286E+19  1.6829E+19  2.6493E+19  3.9334E+19  5.3831E+19
+          6.5338E+19  6.6150E+19  5.1026E+19  2.5205E+19  5.6175E+18  1.2082E+18  3.2246E+17  6.4885E+16  8.5731E+15  4.0644E+15
+          3.9434E+16  1.2613E+16  6.6173E+14  1.1042E+13  6.2047E+10  1.5553E+08  2.8655E+05  4.5761E+02  6.7446E-01  9.4709E-04
+          1.2959E-06  1.7591E-09  2.4289E-12  3.6153E-15  6.5265E-18  1.5118E-15  1.8919E-08  1.7035E-04  5.5619E-03  8.6887E-03
+
+  Energy  4.7989E+05  1.9891E+06  3.5926E+06  6.4807E+06  1.1692E+07  2.1080E+07  3.7969E+07  6.8299E+07  1.2265E+08  2.1973E+08
+          3.9238E+08  6.9682E+08  1.2312E+09  2.1577E+09  3.7380E+09  6.3756E+09  1.0647E+10  1.7257E+10  2.6803E+10  3.9170E+10
+          5.2508E+10  6.2081E+10  6.1419E+10  4.7132E+10  2.5680E+10  8.9563E+09  1.8196E+09  1.8851E+08  1.0177E+07  2.4336E+08
+          1.0870E+10  3.3799E+10  3.2153E+10  2.3142E+10  1.8462E+10  1.6855E+10  1.4381E+10  9.5371E+09  4.2596E+09  1.1063E+09
+          1.4040E+08  6.9920E+06  1.0343E+05  3.4894E+02  5.1511E-01  2.5346E-03  2.2908E-05  2.6174E-07  3.9653E-09  9.0623E-11
+
+
+          Total Power   3.98908E+19   Energy  1.03265E+12
+
+
+
+ Problem Energy Audit:
+                    Energy          Kinetic     Electron        Ion       Radiation    Magnetic       TNburn       Total
+                    Initial       0.00000E+00  4.98847E+13  5.03750E+13  7.19338E+11  0.00000E+00               1.00979E+14
+                    E-I coupling              -2.26703E+10  2.26703E+10
+                    R-E coupling              -3.03750E+11               3.03750E+11
+                    Hydro         6.54292E+12 -3.34851E+12 -3.19284E+12 -1.57234E+09  0.00000E+00  0.00000E+00
+                    Magnetic                   0.00000E+00                            0.00000E+00
+                    Laser         0.00000E+00  0.00000E+00  0.00000E+00                                         0.00000E+00
+                    Bprod. dep.                6.16804E+11  1.26937E+11                           -7.43741E+11
+                    Source        0.00000E+00  0.00000E+00  0.00000E+00  0.00000E+00  0.00000E+00  3.57722E+12  3.57722E+12
+                    Escaped                                             -1.03265E+12              -2.85485E+12  3.88750E+12
+                    Present       6.14013E+12  4.68266E+13  4.73317E+13  9.66547E+08  0.00000E+00  1.19449E+05  1.00299E+14
+                    Error        -4.02784E+11 -5.66406E-02  4.88739E-02  1.21035E+10  0.00000E+00  2.13703E+10 -3.69310E+11
+
+
+ Problem Momentum Audit:
+                    Initial        0.00000E+00
+                    Added-hydro    3.36613E+07
+                    Added-other    0.00000E+00
+                    Present        9.94546E+05
+                    Error         -3.26667E+07
+
+
+ Time Step Controls:
+                    Cntl   Zone       Dt
+                      Q      53   1.22002E-11
+                      C      15   1.12692E-12
+                      V      51   3.98630E-11
+                      P      70   3.16051E-09
+                      E      51   9.99372E-11
+                      I      51   5.39274E-11
+                      R      21   1.83683E-11
+                      M       0   1.00000E+99
+
+ Post processor dump written at cycle      1313 at time  5.0000000E-10
+  
+  
+  Stop Time Reached at time step      1313
+
+
+
+
+ CPU Usage:
+ Elapsed:          25.16 Seconds
+
+
+            Routine     Generate    Ionize     Hydro     Laser    Eitran    Radtrn      Burn     Appkg      Edit     Other
+            Seconds         0.01      0.08      0.06      0.00      0.27     20.44      1.67      2.49      0.00      0.14
+            Percent         0.04      0.32      0.24      0.00      1.07     81.24      6.64      9.90      0.00      0.56
