@@ -199,6 +199,6 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/SmallRuns2/Ag/"
-outputName = "Ag.csv"
+Path = "data/SmallRuns2/Mg/"
+outputName = "Mg.csv"
 main(Path,"inputFiles.txt",outputName)
