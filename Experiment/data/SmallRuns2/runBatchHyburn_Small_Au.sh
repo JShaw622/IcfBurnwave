@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=Hyburn_Small_Au
-#SBATCH -p scarf
+#SBATCH -p devel
 #SBATCH --output=Hyburn_Small_Au.txt
-#SBATCH --ntasks=27
+#SBATCH --ntasks=52
 #SBATCH --cpus-per-task=1
-#SBATCH --time=23:59:59
+#SBATCH --time=11:00:00
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_0_0.inf &
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_0_1.inf &
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_0_2.inf &
@@ -30,4 +30,29 @@ srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Script
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_4_2.inf &
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_4_3.inf &
 srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_4_4.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_5_0.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_5_1.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_5_2.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_5_3.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_5_4.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_6_0.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_6_1.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_6_2.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_6_3.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_6_4.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_7_0.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_7_1.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_7_2.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_7_3.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_7_4.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_8_0.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_8_1.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_8_2.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_8_3.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_8_4.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_9_0.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_9_1.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_9_2.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_9_3.inf &
+srun -n1 --exclusive hyades /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Au/test_T_10_9_4.inf &
 wait

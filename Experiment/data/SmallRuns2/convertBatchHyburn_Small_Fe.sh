@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=Convert_Hyburn_Small_Fe
-#SBATCH -p scarf
+#SBATCH -p devel
 #SBATCH --output=convert-Hyburn_Small_Fe.txt
-#SBATCH --ntasks=27
+#SBATCH --ntasks=52
 #SBATCH --cpus-per-task=1
-#SBATCH --time=23:59:59
+#SBATCH --time=11:00:00
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_0_0.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_0_1.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_0_2.ppf
@@ -30,3 +30,28 @@ ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_4_1.
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_4_2.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_4_3.ppf
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_4_4.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_5_0.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_5_1.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_5_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_5_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_5_4.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_6_0.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_6_1.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_6_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_6_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_6_4.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_7_0.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_7_1.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_7_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_7_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_7_4.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_8_0.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_8_1.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_8_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_8_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_8_4.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_9_0.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_9_1.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_9_2.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_9_3.ppf
+ppf2ncdf /home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/Fe/test_T_10_9_4.ppf
