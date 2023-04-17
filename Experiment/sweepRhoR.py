@@ -82,11 +82,11 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Small/Mg/"):
+def gen_scarf_batch_file(filenames,localPATH="data/SmallRuns2/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/SmallSample/Scripts/C/"):
     #Finding number of tasks
     n_tasks = len(filenames)+2
     
-    jobname="Hyburn_Small_Mg"
+    jobname="Hyburn_Small_C"
     
     print("Creating batch files")
     
@@ -118,20 +118,20 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f2.close()
     f.close()
 
-filePATH = "data/SmallRuns/Mg/"
+filePATH = "data/SmallRuns2/C/"
 
 original_f = filePATH+"originalInput.inf"
 
 
 no_barrierRadSweeps = 3
-no_radiusSweeps = 3
+no_radiusSweeps = 5
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
 init_files(filenames, original_f,PATH = filePATH)
 
-r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.01, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
-r_sweep_barrier_radius(filenames, init_r=0.00001, final_r=0.001, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
+r_sweep_Hs_radius(filenames, init_r = 0.005, final_r=0.015, n_Hs_radius=no_radiusSweeps,PATH = filePATH)
+r_sweep_barrier_radius(filenames, init_r=0.0001, final_r=0.0005, n_Hs_radius=no_radiusSweeps, n_barrier_radius=no_barrierRadSweeps, PATH=filePATH)
 
 gen_scarf_batch_file(filenames)
 gen_cdf_list(filenames, PATH = filePATH)

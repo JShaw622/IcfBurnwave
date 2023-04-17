@@ -34,7 +34,8 @@ def main(inputFileName):
         Bar_rhoR.append(get_Bar_rhoR(f))
         TNproduceRate.append(get_energy_prodRate(f))
         
-        print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
+        if TNproduceRate[i-1] !=0:
+            print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
     
     calc_TNchange(TNproduceRate)
     
@@ -131,7 +132,7 @@ def get_energy_prodRate(filename):
         #print("Getting energy produced from: " + filename)
         f = Dataset(filename,mode='r')
     except:
-        print("Error reading: " +filename)
+        print("\n*****\n Error reading: " +filename+"\n******\n")
         return 0
     
     #Array of dump times i.e. times at which data is put into the ppf/cdf file
@@ -159,5 +160,5 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/Iron/"
+Path = "data/SmallRuns2/Ag/"
 main(Path+"inputFiles.txt")
