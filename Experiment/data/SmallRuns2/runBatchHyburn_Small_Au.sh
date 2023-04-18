@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=Hyburn_Small_Au
-#SBATCH -p devel
+#SBATCH -p scarf
 #SBATCH --output=Hyburn_Small_Au.txt
 #SBATCH --ntasks=52
 #SBATCH --cpus-per-task=1

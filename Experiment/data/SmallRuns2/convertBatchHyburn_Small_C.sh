@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=Convert_Hyburn_Small_C
-#SBATCH -p devel
+#SBATCH -p scarf
 #SBATCH --output=convert-Hyburn_Small_C.txt
 #SBATCH --ntasks=52
 #SBATCH --cpus-per-task=1
