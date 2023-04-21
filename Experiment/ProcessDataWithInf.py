@@ -12,7 +12,15 @@ import pandas as pd
 import seaborn as sns
 from pylab import *
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 
+def func (x, a, b, c, d):
+    x=np.array(x)
+    return a*np.exp(-b*(x-d))+c
+
+def straightFit(x,m,c):
+    x=np.array(x)
+    return m*x+c
 
 def main(path, inputFileName, outputFilename):
     #takes system input and reads the given file which should contain the cdf files to be processed
@@ -25,48 +33,54 @@ def main(path, inputFileName, outputFilename):
     Hs_Tion=[]
     Bar_rhoR=[]
     TNproduceRate=[]
+    Temp=[]
     i=0
     for f in inputfiles:
         i+=1
         #removing newline character
         f=f[0:-1]
         Hs_rhoR.append(get_HS_rhoR(f))
-        Bar_rhoR.append(get_Bar_rhoR(f))
+        #Bar_rhoR.append(get_Bar_rhoR(f))
+        Temp.append(get_Hs_Tion(f))
         TNproduceRate.append(get_energy_prodRate(f))
         
         if TNproduceRate[i-1] !=0:
-            print(f,Hs_rhoR[i-1], Bar_rhoR[i-1], TNproduceRate[i-1])
+            print(f,Hs_rhoR[i-1], Temp[i-1], TNproduceRate[i-1])
     
     #outputs the critical RhoR for ignition into a csv file:
     ignitionIndexArray=calc_TNchange(TNproduceRate)
-    error = (Hs_rhoR[1]-Hs_rhoR[0])/2
-    print_criticalRhoR(ignitionIndexArray,inputfiles,error, path+outputFilename)        
+    xerrorValue = (Hs_rhoR[1]-Hs_rhoR[0])/2
+    IgnitionBoundryX, IgnitionBoundryY, xerror, yerror=print_criticalRhoR(ignitionIndexArray,inputfiles,xerrorValue, path+outputFilename)        
     
-    gen_heatmap(Hs_rhoR, Bar_rhoR, TNproduceRate, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
+    gen_heatmap(Hs_rhoR, Temp, TNproduceRate,IgnitionBoundryX,IgnitionBoundryY,xerror,yerror, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
 
 def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
     #Consider only the files with input index
     print("\nIgnition in files:")
     Hs_rhoR=[]
     Bar_rhoR=[]
-    errorArray=[]
+    xerr=[]
+    yerr=[]
     i=0
     for x in index:
         f=files[x]
-        errorArray.append(error)
+        xerr.append(error)
+        yerr.append(1.5)
         #removes newline character
         f=f[0:-1]
         Hs_rhoR.append(get_HS_rhoR(f))
-        Bar_rhoR.append(get_Bar_rhoR(f))
+        #Bar_rhoR.append(get_Bar_rhoR(f))
+        Bar_rhoR.append(get_Hs_Tion(f))
         print(f+" $\\rho r_{hs}$: "+str(Hs_rhoR[i])+" $\\rho r_{bar}$: "+str(Bar_rhoR[i]))
         i+=1
         
-    df=pd.DataFrame(np.array([Hs_rhoR,errorArray,Bar_rhoR]).T)
-    df.columns=["$\\rho r_{hs}$","$\\delta \\rho r_{hs}$","$\\rho r_{bar}$"]
+    df=pd.DataFrame(np.array([Hs_rhoR,xerr,Bar_rhoR,yerr]).T)
+    df.columns=["$\\rho r_{hs}$","$\\delta \\rho r_{hs}$","$T_{hs}$","\\delta T_{hs}"]
     print(df)
     
     df.to_csv(outputFilename)
     
+    return Hs_rhoR, Bar_rhoR, xerr, yerr
     
     
 
@@ -77,19 +91,26 @@ def calc_TNchange(TNArray):
     newline=True
     diffArray=[]
     for i in range(len(TNArray)-1):
-        diff = TNArray[i+1]-TNArray[i]
-        #'print(diff)
+        if TNArray[i]==0:
+            print("Error in TNArray: ", i+1)
+            diff=0
+        else:
+            diff = TNArray[i+1]-TNArray[i]
+            #print(diff)
         
         diffArray.append(diff)
-        print(diff/TNArray[i-1])
-        if diffArray[i]>=0:
-            if diff/TNArray[i-1] >=100:
-                if newline:
-                    #print("Ignition at: "+str(i+1))
-                    ignitionIndexArr.append(i+1)
-                    newline=False
-        else:
-            newline=True
+        try:
+            #print(diff/TNArray[i])
+            if diffArray[i]>0:
+                if diff/TNArray[i] >=100:
+                    if newline:
+                        print("Ignition at: "+str(i+1))
+                        ignitionIndexArr.append(i+1)
+                        newline=False
+            else:
+                newline=True
+        except:
+            print("No change ")
             
     TNFig = plt.figure()
     plt.scatter(range(len(diffArray)),diffArray)
@@ -149,13 +170,14 @@ def get_HS_rhoR(filename):
 
 
 #generates a graph in rhoR, T space of the energy produced
-def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy production rate ($erg/s$)"):
+def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="TN energy production rate ($erg/s$)"):
     #makes a dictonary out of the labels to be set as dataframe index column and value names
     columnDict = [xLabel,yLabel,zLabel]
     
     #Puts data into a pandas dataframe for seaborn plotting as a heatmap
     df = pd.DataFrame.from_dict(np.array([x,y,z]).T)
     df.columns = columnDict
+    print(df)
     pivotted= df.pivot(index=yLabel,columns=xLabel,values=zLabel)
     #print(pivotted)
     pivotted = pivotted.sort_values(yLabel,ascending=False)    
@@ -168,6 +190,24 @@ def gen_heatmap(x, y, z, xLabel="X", yLabel="Y", zLabel="TN energy production ra
     plt.ylabel(yLabel)
    #plt.title("FLXLRM 1.00")
     plt.show()
+    
+    
+    fig = plt.figure()
+    ax =fig.add_subplot()
+    
+    ax.errorbar(np.log(ignX),np.log(ignY),xerr=xErr,yerr=yErr)
+    #ax.set_yscale("log")
+    #ax.set_xscale("log")
+    popt, pcov = curve_fit(straightFit,np.log(ignX),np.log(ignY))
+    ax.plot(np.log(ignX),straightFit(np.log(ignX),*popt))
+    print(popt)
+    #testx=np.arange(0.5, 1.8,0.1)
+    #testy=1/(testx**(1.5))
+    #ax.plot(np.log(testx),np.log(testy)+2.5)
+    #ax.plot(ignX,func(ignX,1,5,4.2,2))
+    #ax.set_ylim([0, 60])
+
+    
    
 #sums the produced TN energy in each zone at the final post prcessor dump time and returns the value
 def get_energy_prodRate(filename):
@@ -192,17 +232,21 @@ def get_energy_prodRate(filename):
 
 #Reads a file and returns the temperature of the 1st zone at the begining of the problem
 def get_Hs_Tion(filename):
-    #print("Getting Hotspot temperature from: " + filename)
-    f = Dataset(filename,mode='r')
+    #convert filename from .cdf to .inf
+    filename = filename[0:-4]+".inf"
+    #open file convert to array of lines in file and close the file to save memory
+    file = open(filename, "r")
+    f = file.readlines()
+    file.close()
     
-    #zone ion temperature in keV
-    Temp = f.variables["Ti"][0][0]
+    ##### FIND HS temp #####
+    text = "DEFINE HsT "
+    Temp = float((f[8].replace(text, "")))
     
-    f.close()
     return Temp
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/SmallRuns2/Fe/"
+Path = "data/TAnalysis/Fe/"
 outputName = "Fe.csv"
 main(Path,"inputFiles.txt",outputName)
