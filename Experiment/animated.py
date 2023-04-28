@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = "data/SmallRuns2/Au/"
-hyades_file = PATH+'test_T_10_3_2.cdf'#"originalinput.cdf"
+PATH = "data/TAnalysis/Fe/"
+hyades_file = PATH+'test_T_10_4_19.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem
@@ -59,7 +59,7 @@ figDen = plt.figure()
 axDen= plt.axes(xlim=(startPosition, endPosition), ylim=(0, 600))
 axDen.set_title("Density (blue) and temperature (red) against position")
 axDen.set_xlabel("Position (cm)")
-axDen.set_ylabel("Density (g/cm^3)")
+axDen.set_ylabel("Density ($gcm^{-3}$)")
 lineDen, =axDen.plot([], [])
 DenFrame = axDen.text(0,520, "")
 
@@ -87,9 +87,9 @@ def animateDen(i):
                       + "\nTime: " + str.format('{0:.6}', dumpTime[i]) + " sec")    
     return lineDen, lineT, DenFrame
 
-animDen = FuncAnimation(figDen, animateDen, init_func=init,
-                                frames=endFrame-startFrame, interval=frameInterval, blit=True)
-animDen.save(PATH+'density.gif', writer='imagemagick')
+#animDen = FuncAnimation(figDen, animateDen, init_func=init,
+#                                frames=endFrame-startFrame, interval=frameInterval, blit=True)
+#animDen.save(PATH+'density.gif', writer='imagemagick')
 print("Density finished")
 
 # figFlow = plt.figure()
@@ -186,13 +186,13 @@ print(get_HS_rhoR(hyades_file))
 # figInit = plt.figure(dpi=300)
 
 # axDeninit= plt.axes(xlim=(startPosition, 0.05), ylim=(0, 300))
-# plt.xticks([0,0.0095,0.05],["0","$r_{hs}$",""])
+# plt.xticks([0,0.0093,0.05],["0","$r_{hs}$",""])
 # #axDeninit.set_title("Density (blue) and temperature (red) against position")
 # axDeninit.set_xlabel("Position (cm)")
-# axDeninit.set_ylabel("Density $(gcm^{-3})$")
+# axDeninit.set_ylabel("Density (gcm$^{-3}$)")
 # #lineDen, =axDen.plot([], [])
 # #DenFrame = axDen.text(0,520, "")
-# denln=axDeninit.plot(position[0][1:-1],zoneDensity[0],label="Density ($gcm^{-3}$)")
+# denln=axDeninit.plot(position[0][1:-1],zoneDensity[0],label="Density (gcm$^{-3}$)")
 # print(position[0][1:-1])
 # #plot temperature on same graph
 # axTinit=axDeninit.twinx()
@@ -200,12 +200,12 @@ print(get_HS_rhoR(hyades_file))
 # axTinit.set_ylabel("Ion Temperature (keV)",color="red")
 
 # tline=axTinit.plot(position[0][1:-1],zoneTi[0],c="red",label="Temperature (KeV)")
-# plt.plot([0.0095,0.013],[10,10],c="grey")
-# plt.fill_between([0.0095,0.013],[10,10],alpha=0.3,fc="grey")
+# plt.plot([0.0093,0.013],[10,10],c="grey")
+# plt.fill_between([0.0093,0.013],[10,10],alpha=0.3,fc="grey")
 
 # plt.text(0.01,11.5,"$r_{bar}$")
-# plt.plot([0.0095,0.013],[10.5,10.5],c="black",linestyle="dashed")
-# plt.plot([0.0095,0.0095],[10.3,10.7],c="black")
+# plt.plot([0.0093,0.013],[10.5,10.5],c="black",linestyle="dashed")
+# plt.plot([0.0093,0.0093],[10.3,10.7],c="black")
 # plt.plot([0.013,0.013],[10.3,10.7],c="black")
 
 # lns = denln+tline
@@ -214,5 +214,7 @@ print(get_HS_rhoR(hyades_file))
 
 
 # plt.savefig('initCond.png',bbox_inches="tight")
+
+print(zoneTi[55])
 
 f.close()

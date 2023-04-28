@@ -67,20 +67,20 @@ mpl.rcParams.update({'font.size': 16})
 
 fig, ax =plt.subplots(dpi=300)#
 
-ax.plot(x1,T1,linestyle="dashed",label="T",c="red")
+#ax.plot(x1,T1,linestyle="dashed",label="T",c="red")
 ax.plot(x3,T2,linestyle="dashed",label="T",c="red")
 ax.plot([9.8,13,13,20],[2.4,2.4,1.75,1.75],label="$\\rho$",c="#1f77b4")
 ax.plot(x2,y2)
 
 #ax.plot([2,2,20],[0,2,2],label="$\\rho$",c="#1f77b4")
 
-ax.fill_between(x3,T2,alpha=0.3,fc="grey")
+#ax.fill_between(x3,T2,alpha=0.3,fc="grey")
 
-ax.add_patch(curly_arrow((1, 1), (3, 1), n=2, arr_size=0.1,col="orange"))
+ax.add_patch(curly_arrow((1, 1), (9, 1), n=6.3, arr_size=0.1,col="orange"))
 
-ax.hlines(1,xmin=3.5,xmax=9,linestyle="dashed")
-ax.arrow(8.5,1,0.5,0,width=0.05,length_includes_head=True,head_length=0.5)
-plt.text(6,1.1,"$q_{dif}$")
+#ax.hlines(1,xmin=3.5,xmax=9,linestyle="dashed")
+#ax.arrow(8.5,1,0.5,0,width=0.05,length_includes_head=True,head_length=0.5)
+#plt.text(6,1.1,"$q_{dif}$")
 
 
 plt.text(0.5,0.95,"$q_s$")      
@@ -95,4 +95,4 @@ plt.ylabel("")
 
 plt.legend()
 
-plt.savefig('ThermalWaves3.png',bbox_inches="tight")
+plt.savefig('ThermalWaves2.png',bbox_inches="tight")

@@ -31,7 +31,7 @@ def init_files(names, original_filename, PATH="data/"):
         f.writelines(o_f)
         f.close()
     
-def genSweep(names, steps, originalF, startGroups=50, finalGroups=2000, PATH="data/"):
+def genSweep(names, steps, originalF, startGroups=10, finalGroups=150, PATH="data/"):
     initNo = startGroups
     groupIncriment =(finalGroups-startGroups)/(steps-1)
     i=0
@@ -44,7 +44,7 @@ def genSweep(names, steps, originalF, startGroups=50, finalGroups=2000, PATH="da
         o_f = open(PATH+n, "r").readlines()
         #print("Radius sweep file: " + n)
         f = open(PATH+n, "w")
-        o_f[51] = "GROUP 1 150 1 "+str(round(group))+"\n"
+        o_f[51] = "GROUP 1 "+str(round(group))+" 0.001 2000"+"\n"
         group+=groupIncriment
         f.writelines(o_f)
         f.close()
@@ -57,7 +57,7 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/Convergence/"):
+def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/test/scripts/"):
     #Finding number of tasks
     #Finding number of tasks
     n_tasks = len(filenames)
@@ -80,7 +80,7 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
     f2.writelines("#SBATCH --job-name=HyburnConvert\n")
     f2.writelines("#SBATCH -p scarf\n")
     f2.writelines("#SBATCH --output=convert-output.txt\n")
-    f2.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    f2.writelines("#SBATCH --ntasks=1\n")
     f2.writelines("#SBATCH --cpus-per-task=1\n")
     f2.writelines("#SBATCH --time=23:59:59\n")
 #Commands for creating Hyades Batch file scripts
@@ -94,7 +94,7 @@ def gen_scarf_batch_file(filenames,localPATH="batchfiles/", scarfPATH="/home/vol
 
 
 filePATH = "data/opacityConvergence/"
-no_groupSteps = 50
+no_groupSteps = 70
 
 filenames = get_filenames(no_groupSteps, PATH = filePATH)
 

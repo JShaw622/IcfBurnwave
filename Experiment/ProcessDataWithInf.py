@@ -12,13 +12,18 @@ import pandas as pd
 import seaborn as sns
 from pylab import *
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
+from scipy.odr import *
+from matplotlib import rc
+
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('text', usetex=True)
 
 def func (x, a, b, c, d):
     x=np.array(x)
     return a*np.exp(-b*(x-d))+c
 
-def straightFit(x,m,c):
+def straightFit(p,x):
+    m,c=p
     x=np.array(x)
     return m*x+c
 
@@ -42,7 +47,7 @@ def main(path, inputFileName, outputFilename):
         Hs_rhoR.append(get_HS_rhoR(f))
         #Bar_rhoR.append(get_Bar_rhoR(f))
         Temp.append(get_Hs_Tion(f))
-        TNproduceRate.append(get_energy_prodRate(f))
+        TNproduceRate.append(get_energy_prodRate(f)/(10**7))
         
         if TNproduceRate[i-1] !=0:
             print(f,Hs_rhoR[i-1], Temp[i-1], TNproduceRate[i-1])
@@ -52,7 +57,7 @@ def main(path, inputFileName, outputFilename):
     xerrorValue = (Hs_rhoR[1]-Hs_rhoR[0])/2
     IgnitionBoundryX, IgnitionBoundryY, xerror, yerror=print_criticalRhoR(ignitionIndexArray,inputfiles,xerrorValue, path+outputFilename)        
     
-    gen_heatmap(Hs_rhoR, Temp, TNproduceRate,IgnitionBoundryX,IgnitionBoundryY,xerror,yerror, xLabel="Hot spot \u03C1r ($gcm^{-2}$)", yLabel="Barrier \u03C1r ($gcm^{-2}$)")
+    gen_heatmap(Hs_rhoR, Temp, TNproduceRate,IgnitionBoundryX,IgnitionBoundryY,xerror,yerror, xLabel="Hot spot $\\rho r (\\times 10^{-7}$kgm$^{-2})$", yLabel="Initial $T_{hs}$ (KeV)")
 
 def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
     #Consider only the files with input index
@@ -69,7 +74,6 @@ def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
         #removes newline character
         f=f[0:-1]
         Hs_rhoR.append(get_HS_rhoR(f))
-        #Bar_rhoR.append(get_Bar_rhoR(f))
         Bar_rhoR.append(get_Hs_Tion(f))
         print(f+" $\\rho r_{hs}$: "+str(Hs_rhoR[i])+" $\\rho r_{bar}$: "+str(Bar_rhoR[i]))
         i+=1
@@ -81,8 +85,6 @@ def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
     df.to_csv(outputFilename)
     
     return Hs_rhoR, Bar_rhoR, xerr, yerr
-    
-    
 
 def calc_TNchange(TNArray):
     #Array stores index of first instance of ignition.
@@ -170,37 +172,100 @@ def get_HS_rhoR(filename):
 
 
 #generates a graph in rhoR, T space of the energy produced
-def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="TN energy production rate ($erg/s$)"):
+def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="Fusion energy production rate (J s$^{-1}$)"):
     #makes a dictonary out of the labels to be set as dataframe index column and value names
     columnDict = [xLabel,yLabel,zLabel]
     
     #Puts data into a pandas dataframe for seaborn plotting as a heatmap
     df = pd.DataFrame.from_dict(np.array([x,y,z]).T)
     df.columns = columnDict
-    print(df)
+    #print(df)
     pivotted= df.pivot(index=yLabel,columns=xLabel,values=zLabel)
     #print(pivotted)
     pivotted = pivotted.sort_values(yLabel,ascending=False)    
     
-    ax = sns.heatmap(pivotted,cmap='magma', vmin=0,cbar_kws={'label':zLabel})
+    fig1 = plt.figure(dpi=300)
+    ax = sns.heatmap(pivotted,cmap='magma', vmin=0, vmax=2*10**20,cbar_kws={'label':zLabel})
     #ax.set_xticks(range(0,10),np.around((df['X_value'].tolist()[0:10]),3))
     
     #plt.scatter(x[0:500],y[0:500], linewidths=1, alpha=.7,edgecolor='k',s=20,c=z[0:500])
     plt.xlabel(xLabel)
     plt.ylabel(yLabel)
    #plt.title("FLXLRM 1.00")
+    plt.savefig('heatmapTRhoR_NoBar.png',bbox_inches="tight") 
     plt.show()
     
     
-    fig = plt.figure()
+    
+    #### log log plot stuff
+    ignX=np.array(ignX)
+    ignY=np.array(ignY)
+    xErr=np.array(xErr)
+    yErr=np.array(yErr)
+    
+    ###### sort the arrays into decreasing numerical order
+    arr1inds = np.array(ignX).argsort()
+    ignX=ignX[arr1inds[::-1]]
+    xErr=xErr[arr1inds[::-1]]
+    ignY=ignY[arr1inds[::-1]]
+    yErr=yErr[arr1inds[::-1]]
+    print(ignX)
+    
+    fig = plt.figure(dpi=300)
     ax =fig.add_subplot()
     
-    ax.errorbar(np.log(ignX),np.log(ignY),xerr=xErr,yerr=yErr)
-    #ax.set_yscale("log")
-    #ax.set_xscale("log")
-    popt, pcov = curve_fit(straightFit,np.log(ignX),np.log(ignY))
-    ax.plot(np.log(ignX),straightFit(np.log(ignX),*popt))
-    print(popt)
+    ax.scatter(np.log(ignX),np.log(ignY),marker="x",c="black",linewidth=1)
+    
+    logXerror = np.array(xErr)/np.array(ignX)
+    logYerror = np.array(yErr)/np.array(ignY)
+    ax.errorbar(np.log(ignX),np.log(ignY),xerr=logXerror,yerr=logYerror, linestyle="None",capsize=2,c="black",linewidth=1)
+
+    linearModel = Model(straightFit)    
+
+    Data=RealData(np.log(ignX),np.log(ignY),sx=logXerror,sy=logYerror)
+    odr=ODR(Data,linearModel,beta0=[-3,4])
+    
+    modelOutput=odr.run()
+    
+    fitY=straightFit(modelOutput.beta, np.log(ignX))
+    
+    upperBeta = modelOutput.beta+modelOutput.sd_beta
+    lowerBeta= modelOutput.beta-modelOutput.sd_beta
+    
+    upperFitY=straightFit(upperBeta,np.log(ignX))
+    lowerFitY=straightFit(lowerBeta,np.log(ignX))
+
+    modelOutput.pprint()
+    
+    line1=r"Fit: $y=mx+c$" + "\n"
+    eqnStart=r"\begin{eqnarray*}"
+    line2 =r"y&=&mx+c"+"\\\\"
+    line3 =r"m&=&"+str(round(modelOutput.beta[0],1))+"\pm "+str(round(modelOutput.sd_beta[0],1))+"\\\\"
+    line4=r"c&=&"+str(round(modelOutput.beta[1],2))+"\pm"+str(round(modelOutput.sd_beta[1],2))+"\\\\"
+    eqnEnd= r"\end{eqnarray*}"
+    
+    fitlabel=line1+eqnStart+line3+line4+eqnEnd
+    
+    ax.plot(np.log(ignX),fitY, c="r", linestyle="dashed",label=fitlabel)
+    ax.plot(np.log(ignX),upperFitY, c="g", linestyle="dotted")
+    ax.plot(np.log(ignX),lowerFitY, c="g", linestyle="dotted")
+    ax.fill_between(np.log(ignX), upperFitY, lowerFitY, facecolor="gray", alpha=0.5)
+    
+    #ax.axhline(np.log(5), linestyle="dashed", c="orange")
+    
+    ax.tick_params(axis="both",which="both",direction="in",top=True, right=True)
+    plt.minorticks_on()
+    ax.set_xlabel("$\\ln(\\rho r_{hs})$")
+    ax.set_ylabel("$\\ln(T_{0,hs})$")
+    plt.legend(handlelength=1)
+    ax.set_ylim([-0.5, 4.1])
+    plt.savefig('loglogTRhoR_Fe.png',bbox_inches="tight")
+    plt.show()
+    
+    
+    #popt, pcov = curve_fit(straightFit,np.log(ignX),np.log(ignY))
+    #ax.plot(np.log(ignX),straightFit(np.log(ignX),*popt))
+    #print(popt)
     #testx=np.arange(0.5, 1.8,0.1)
     #testy=1/(testx**(1.5))
     #ax.plot(np.log(testx),np.log(testy)+2.5)

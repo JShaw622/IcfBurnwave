@@ -122,7 +122,7 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f.writelines("#SBATCH --job-name="+jobname+"\n")
     f.writelines("#SBATCH -p scarf\n")
     f.writelines("#SBATCH --output="+jobname+".txt\n")
-    f.writelines("#SBATCH --ntasks="+str(1)+"\n")
+    f.writelines("#SBATCH --ntasks="+str(40)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=11:00:00\n")
     
@@ -135,20 +135,20 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f2.writelines("#SBATCH --time=11:00:00\n")
 #Commands for creating Hyades Batch file scripts
     for n in filenames:
-        f.writelines("hyades "+scarfPATH+n+"\n")
+        f.writelines("srun -n1 hyades "+scarfPATH+n+"\n")
         #Commands for converting to cdf file
         f2.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
     f.writelines("wait")
     f2.close()
     f.close()
 
-filePATH = "data/TAnalysis/NoBar/"
+filePATH = "data/TAnalysis/FeLarge/"
 
 original_f = filePATH+"originalInput.inf"
 
 
-no_barrierRadSweeps = 20
-no_radiusSweeps = 20
+no_barrierRadSweeps = 40
+no_radiusSweeps = 40
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 
