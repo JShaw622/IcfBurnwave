@@ -25,7 +25,7 @@ def main(path1, path2, inputFileName):
     
     #print(HsRhoR_1)
     
-    atRhoR= 1.37
+    atRhoR= 0.78
     Tslice_1 = getRhoRSlice(atRhoR, HsRhoR_1, HsT_1)
     EprodSlice_1 =getRhoRSlice(atRhoR, HsRhoR_1,TNRate_1)
     
@@ -86,7 +86,7 @@ def produceGraph(xs,ys,Xerror, hsValue):
     ax.scatter(x1,np.log(y1),marker="x",c="black",linewidth=1,label="Fe barrier ($\\rho r_{bar}=1\\times10^{-8}$ kgm$^{-2}$)")
     ax.errorbar(x1,np.log(y1),xerr=Xerror, linestyle="None",capsize=2,c="black",linewidth=1)
 
-    ax.plot([],[],' ',label="Hot spot: \n$\\rho r_{hs}=("+str(round(hsValue,2))+"\\pm 0.07)\\times 10^{-7}$ kgm$^{-2}$")
+    ax.plot([],[],' ',label="Hot spot: \n$\\rho r_{hs}=("+str(round(round(hsValue,2)*10,1))+"\\pm 0.7)\\times 10^{-8}$ kgm$^{-2}$")
  
     ax.tick_params(axis="both",which="both",direction="in",top=True, right=True)
     plt.minorticks_on()
