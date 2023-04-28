@@ -135,7 +135,7 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f2.writelines("#SBATCH --time=11:00:00\n")
 #Commands for creating Hyades Batch file scripts
     for n in filenames:
-        f.writelines("srun -n1 hyades "+scarfPATH+n+"\n")
+        f.writelines("srun -n1 hyades "+scarfPATH+n+" &\n")
         #Commands for converting to cdf file
         f2.writelines("ppf2ncdf "+scarfPATH+n[0:-3]+"ppf\n")
     f.writelines("wait")

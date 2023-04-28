@@ -57,7 +57,7 @@ def main(path, inputFileName, outputFilename):
     xerrorValue = (Hs_rhoR[1]-Hs_rhoR[0])/2
     IgnitionBoundryX, IgnitionBoundryY, xerror, yerror=print_criticalRhoR(ignitionIndexArray,inputfiles,xerrorValue, path+outputFilename)        
     
-    gen_heatmap(Hs_rhoR, Temp, TNproduceRate,IgnitionBoundryX,IgnitionBoundryY,xerror,yerror, xLabel="Hot spot $\\rho r (\\times 10^{-7}$kgm$^{-2})$", yLabel="Initial $T_{hs}$ (KeV)")
+    gen_heatmap(Hs_rhoR, Temp, TNproduceRate,IgnitionBoundryX,IgnitionBoundryY,xerror,yerror, xLabel="Hot spot $\\rho r$ $(\\times 10^{-7}$kgm$^{-2})$", yLabel="Initial $T_{hs}$ (KeV)")
 
 def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
     #Consider only the files with input index
@@ -172,7 +172,7 @@ def get_HS_rhoR(filename):
 
 
 #generates a graph in rhoR, T space of the energy produced
-def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="Fusion energy production rate (J s$^{-1}$)"):
+def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="Fusion energy production rate (Js$^{-1}$)"):
     #makes a dictonary out of the labels to be set as dataframe index column and value names
     columnDict = [xLabel,yLabel,zLabel]
     
