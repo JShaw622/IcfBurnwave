@@ -51,6 +51,11 @@ def straightFit(p,x,err):
     x=np.array(x)
     return m*x+c
 
+def straightFitMod(p,x):
+    m, c =p
+    x=np.array(x)
+    return m*x+c
+
 
 def getDataPoints(f):
     df=pd.read_csv(f)
@@ -62,33 +67,72 @@ file2="data/TAnalysis/Fe/Fe.csv"
 noBarData= getDataPoints(file1)
 FeData= getDataPoints(file2)
 
-feXpoints=[2.85, 1.67, 1.23, 1.23, 1.08, 1.08, 1.08, 1.08, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93]
+feXpoints=[2.85, 1.67, 1.23, 1.23, 1.08, 1.08, 1.08, 1.08, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.93, 0.99, 0.99, 0.99, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.84, 0.84,
+ 0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.84]
+feYpoints=[ 4.,  6.,  9., 11., 14., 16., 19., 22., 24., 50., 47., 29., 32., 35., 37., 40., 42., 45.,
+ 27.,21., 24., 25., 35., 26., 27., 29., 31., 32., 34., 36., 37., 49., 39., 40., 41., 42., 44.,
+ 45, 46, 47, 50]
 feBeta=[-3.1,  3.28]
 feErr=np.array([0.3,0.08])
 noBarXpoints=[1.67, 1.23, 1.08, 0.93, 0.78, 0.78, 0.64, 0.64, 0.64, 0.64, 0.64, 0.64, 0.64, 0.64, 0.49, 0.49, 0.49, 0.49]
 noBarBeta=[-1.9,  2.45]
 noBarErr=np.array([0.2,0.07])
 
+feXpoints=feXpoints[::-1]
+feYpoints=feYpoints[::-1]
+
+
+fePoints = dict(zip(
+    feXpoints,feYpoints
+))
+
+# Output dictionary
+print(fePoints)
+
+# Output keys (equivalent of new_list1)
+print(list(fePoints.keys()))
+
+# Output values (equivalent of new_list2)
+print(list(fePoints.values()))
+
+
+feXpoints=np.array(list(fePoints.keys()))
+feYpoints=np.array(list(fePoints.values()))
+
+linearModel = Model(straightFitMod)    
+
+Data=RealData(np.log(feXpoints),np.log(feYpoints),sx=0.07/feXpoints,sy=1.5/feYpoints)
+odr=ODR(Data,linearModel,beta0=[-3,4])
+
+modelOutput=odr.run()
+modelOutput.pprint()
+
 x=np.arange(0.49,2.85,0.01)
+fitY=straightFit(modelOutput.beta, np.log(x), [0,0])
+
 
 
 fig = plt.figure(dpi=300)
 ax = fig.add_subplot()
 
-noBarPoints = ax.scatter(np.log(noBarData["$\\rho r_{hs}$"]),np.log(noBarData["$T_{hs}$"]),c="green",marker="^")
-fePoints = ax.scatter(np.log(FeData["$\\rho r_{hs}$"]),np.log(FeData["$T_{hs}$"]),c="black",marker="x",label="Fe")
+ax.plot(np.log(x),fitY)
 
-ax.errorbar(np.log(noBarData["$\\rho r_{hs}$"]),np.log(noBarData["$T_{hs}$"]),xerr=0.07/noBarData["$\\rho r_{hs}$"],yerr=1.5/noBarData["$T_{hs}$"],linestyle="none",c="green",marker="^",capsize=2)
-ax.errorbar(np.log(FeData["$\\rho r_{hs}$"]),np.log(FeData["$T_{hs}$"]),xerr=0.07/FeData["$\\rho r_{hs}$"],yerr=1.5/FeData["$T_{hs}$"],linestyle="none",c="black",marker="x",capsize=2,label="Fe")
+ax.scatter(np.log(feXpoints),np.log(feYpoints))
 
-line1=r"Fit: $y=mx+c$" + "\n"
-eqnStart=r"\begin{eqnarray*}"
-line2 =r"y&=&mx+c"+"\\\\"
-line3 =r"m&=&"+str(feBeta[0])+"\pm "+str(feErr[0])+"\\\\"
-line4=r"c&=&"+str(feBeta[1])+"\pm"+str(feBeta[1])+"\\\\"
-eqnEnd= r"\end{eqnarray*}"
+# noBarPoints = ax.scatter(np.log(noBarData["$\\rho r_{hs}$"]),np.log(noBarData["$T_{hs}$"]),c="green",marker="^")
+# fePoints = ax.scatter(np.log(FeData["$\\rho r_{hs}$"]),np.log(FeData["$T_{hs}$"]),c="black",marker="x",label="Fe")
 
-fitlabel=line1+eqnStart+line3+line4+eqnEnd
+# ax.errorbar(np.log(noBarData["$\\rho r_{hs}$"]),np.log(noBarData["$T_{hs}$"]),xerr=0.07/noBarData["$\\rho r_{hs}$"],yerr=1.5/noBarData["$T_{hs}$"],linestyle="none",c="green",marker="^",capsize=2)
+# ax.errorbar(np.log(FeData["$\\rho r_{hs}$"]),np.log(FeData["$T_{hs}$"]),xerr=0.07/FeData["$\\rho r_{hs}$"],yerr=1.5/FeData["$T_{hs}$"],linestyle="none",c="black",marker="x",capsize=2,label="Fe")
+
+# line1=r"Fit: $y=mx+c$" + "\n"
+# eqnStart=r"\begin{eqnarray*}"
+# line2 =r"y&=&mx+c"+"\\\\"
+# line3 =r"m&=&"+str(feBeta[0])+"\pm "+str(feErr[0])+"\\\\"
+# line4=r"c&=&"+str(feBeta[1])+"\pm"+str(feBeta[1])+"\\\\"
+# eqnEnd= r"\end{eqnarray*}"
+
+# fitlabel=line1+eqnStart+line3+line4+eqnEnd
 
 upperFe=straightFit(feBeta,np.log(x),feErr)
 lowerFe=straightFit(feBeta,np.log(x),feErr*-1)
@@ -122,7 +166,7 @@ feFit = mlines.Line2D([],[], c="r", linestyle="dashed")
 noBarFit = mlines.Line2D([],[], c="b", linestyle="dashed")
 
 
-l =ax.legend(handles=[(feFit,fePoints),(noBarFit,noBarPoints)],labels=["Fe barrier\n$m=-3.1\\pm0.3$","No Barrier\n$m=-1.9\\pm0.2$"],handler_map={tuple: HandlerTupleVertical(ndivide=None)})
+#l =ax.legend(handles=[(feFit,fePoints),(noBarFit,noBarPoints)],labels=["Fe barrier\n$m=-3.1\\pm0.3$","No Barrier\n$m=-1.9\\pm0.2$"],handler_map={tuple: HandlerTupleVertical(ndivide=None)})
 
 plt.savefig('loglogTRhoR_NoBar_BOTH.png',bbox_inches="tight")
 plt.show()

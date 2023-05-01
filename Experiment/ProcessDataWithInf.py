@@ -209,7 +209,8 @@ def gen_heatmap(x, y, z,ignX,ignY,xErr,yErr, xLabel="X", yLabel="Y", zLabel="Fus
     xErr=xErr[arr1inds[::-1]]
     ignY=ignY[arr1inds[::-1]]
     yErr=yErr[arr1inds[::-1]]
-    print(ignX)
+    
+    print(ignY)
     
     fig = plt.figure(dpi=300)
     ax =fig.add_subplot()
@@ -312,6 +313,6 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/TAnalysis/Fe/"
-outputName = "Fe.csv"
+Path = "data/TAnalysis/C/"
+outputName = "C.csv"
 main(Path,"inputFiles.txt",outputName)

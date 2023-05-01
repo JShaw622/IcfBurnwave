@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = "data/TAnalysis/Fe/"
-hyades_file = PATH+'test_T_10_4_19.cdf'#"originalinput.cdf"
+PATH = "data/TAnalysis/C/"
+hyades_file = PATH+'test_T_10_5_19.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem
@@ -87,9 +87,9 @@ def animateDen(i):
                       + "\nTime: " + str.format('{0:.6}', dumpTime[i]) + " sec")    
     return lineDen, lineT, DenFrame
 
-#animDen = FuncAnimation(figDen, animateDen, init_func=init,
-#                                frames=endFrame-startFrame, interval=frameInterval, blit=True)
-#animDen.save(PATH+'density.gif', writer='imagemagick')
+animDen = FuncAnimation(figDen, animateDen, init_func=init,
+                                frames=endFrame-startFrame, interval=frameInterval, blit=True)
+animDen.save(PATH+'density.gif', writer='imagemagick')
 print("Density finished")
 
 # figFlow = plt.figure()

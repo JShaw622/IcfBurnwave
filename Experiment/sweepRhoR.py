@@ -106,11 +106,11 @@ def gen_cdf_list(filenames, PATH="data/"):
         f.writelines(PATH+n[0:-3]+"cdf\n")
 
 #generates the batch file for scarf to run
-def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/Temp/Fe/"):
+def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home/vol05/scarf1185/icfBurnwave/Temp/C/"):
     #Finding number of tasks
     n_tasks = len(filenames)+2
     
-    jobname="Hyburn_T_Fe"
+    jobname="Hyburn_T_C"
     
     print("Creating batch files")
     
@@ -122,7 +122,7 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f.writelines("#SBATCH --job-name="+jobname+"\n")
     f.writelines("#SBATCH -p scarf\n")
     f.writelines("#SBATCH --output="+jobname+".txt\n")
-    f.writelines("#SBATCH --ntasks="+str(40)+"\n")
+    f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=11:00:00\n")
     
@@ -142,13 +142,13 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f2.close()
     f.close()
 
-filePATH = "data/TAnalysis/FeLarge/"
+filePATH = "data/TAnalysis/C/"
 
 original_f = filePATH+"originalInput.inf"
 
 
-no_barrierRadSweeps = 40
-no_radiusSweeps = 40
+no_barrierRadSweeps = 20
+no_radiusSweeps = 20
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 

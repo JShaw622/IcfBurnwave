@@ -2,7 +2,7 @@
 #SBATCH --job-name=Convert_Hyburn_T_NoBar
 #SBATCH -p scarf
 #SBATCH --output=convert-Hyburn_T_NoBar.txt
-#SBATCH --ntasks=402
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=11:00:00
 ppf2ncdf /home/vol05/scarf1185/icfBurnwave/Temp/noBar/test_T_10_0_0.ppf
