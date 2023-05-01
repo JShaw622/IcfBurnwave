@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-PATH = "data/TAnalysis/C/"
-hyades_file = PATH+'test_T_10_5_19.cdf'#"originalinput.cdf"
+PATH = "data/TAnalysis/noBarNoExtrap/"
+hyades_file = PATH+'test_T_10_0_0.cdf'#"originalinput.cdf"
 f      = Dataset(hyades_file,mode='r') #open the file "hyades_file" in read mode
 
 #Finding the number of zones in the problem and the number of time steps in the problem

@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=Convert_Hyburn_T_NoBar
+#SBATCH --job-name=Convert_Hyburn_T_noBar
 #SBATCH -p scarf
-#SBATCH --output=convert-Hyburn_T_NoBar.txt
+#SBATCH --output=convert-Hyburn_T_noBar.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=11:00:00

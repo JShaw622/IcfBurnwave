@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=Hyburn_T_NoBar
+#SBATCH --job-name=Hyburn_T_noBar
 #SBATCH -p scarf
-#SBATCH --output=Hyburn_T_NoBar.txt
-#SBATCH --ntasks=40
+#SBATCH --output=Hyburn_T_noBar.txt
+#SBATCH --ntasks=402
 #SBATCH --cpus-per-task=1
 #SBATCH --time=11:00:00
 srun -n1 hyades /home/vol05/scarf1185/icfBurnwave/Temp/noBar/test_T_10_0_0.inf &
