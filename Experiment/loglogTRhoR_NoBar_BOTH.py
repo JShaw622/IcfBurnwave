@@ -79,11 +79,11 @@ rError=0.07
 
 feYerr= Terror/FeData["$T_{hs}$"]
 feXerr= rError/FeData["$\\rho r_{hs}$"]
-print(FeData["$\\rho r_{hs}$"],feXerr)
+#print(FeData["$\\rho r_{hs}$"],feXerr)
 
-print(0.15/FeData["$\\rho r_{hs}$"][0])
-for i in range(len(FeData["$\\rho r_{hs}$"])):
-    print(feXerr[i],rError/FeData["$\\rho r_{hs}$"][i])
+#print(0.15/FeData["$\\rho r_{hs}$"][0])
+#for i in range(len(FeData["$\\rho r_{hs}$"])):
+#    print(feXerr[i],rError/FeData["$\\rho r_{hs}$"][i])
 
 noBarYerr= Terror/noBarData["$T_{hs}$"]
 noBarXerr= rError/noBarData["$\\rho r_{hs}$"]

@@ -51,6 +51,7 @@ def r_sweep_Hs_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, PATH=
         r+=r_increment
         f.writelines(o_f)
         f.close()
+        print(i, n)
         
 #loops through files and changes the temperature of the hotspot between init_r and final_r
 def r_sweep_barrier_radius(names, init_r = 0.001, final_r=0.01, n_Hs_radius=10, n_barrier_radius=10, PATH="data/"):
@@ -80,7 +81,9 @@ def T_sweep(names, init_T = 0.001, final_T=0.01, n_Hs_radius=10, n_T=10,r=0.001,
     T = init_T
     T_increment =(final_T-init_T)/steps
     c=0
-    for i in range(0, len(names), n_T):
+    for i in range(0, len(names), n_Hs_radius):
+        #For radius i:
+            #change each temperature
         for j in range(n_T):
             #print(j, i/n_Hs_radius, r)
             o_f = open(PATH+names[c], "r").readlines()
@@ -96,7 +99,8 @@ def T_sweep(names, init_T = 0.001, final_T=0.01, n_Hs_radius=10, n_T=10,r=0.001,
             f.writelines(o_f)
             f.close()
             c+=1
-        T+=T_increment
+            T+=T_increment
+        
         
 #generates a list of the names of output files to be read by dataprocessing    
 def gen_cdf_list(filenames, PATH="data/"):
@@ -122,7 +126,7 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f.writelines("#SBATCH --job-name="+jobname+"\n")
     f.writelines("#SBATCH -p scarf\n")
     f.writelines("#SBATCH --output="+jobname+".txt\n")
-    f.writelines("#SBATCH --ntasks="+str(n_tasks)+"\n")
+    f.writelines("#SBATCH --ntasks="+str(400)+"\n")
     f.writelines("#SBATCH --cpus-per-task=1\n")
     f.writelines("#SBATCH --time=11:00:00\n")
     
@@ -142,13 +146,13 @@ def gen_scarf_batch_file(filenames,localPATH="data/TAnalysis/", scarfPATH="/home
     f2.close()
     f.close()
 
-filePATH = "data/TAnalysis/C/"
+filePATH = "data/TAnalysis/CLarge/"
 
 original_f = filePATH+"originalInput.inf"
 
 
 no_barrierRadSweeps = 20
-no_radiusSweeps = 20
+no_radiusSweeps = 80
 
 filenames = get_filenames(10,n_Hs_radius=no_radiusSweeps,n_barrier_radius=no_barrierRadSweeps, PATH = filePATH)
 

@@ -1,0 +1,98 @@
+test_T_10_72_0
+c
+geometry 3
+c
+c Define hotspot parameters
+c
+DEFINE HsRad 0.00200
+DEFINE HsEndZone 10
+DEFINE HsT 10
+DEFINE HsDensity 100
+c
+c Define barrier parameters
+c
+DEFINE BendRad 0.00825
+DEFINE BendZone 15
+DEFINE BT 200e-3
+DEFINE BDensity 100
+c
+c Define Cold bulk fuel parameters
+c
+DEFINE totRad 0.1
+DEFINE totalZones 70
+DEFINE CfT 200e-3
+DEFINE CfDensity 100
+c
+c Set up mesh
+c Cold fuel has feathering increasing in size
+c 
+MESH 1 HsEndZone+1 0 HsRad
+MESH HsEndZone+1 BendZone+1 HsRad BendRad
+MESH BendZone+1 totalZones+1 BendRad totRad 1.1
+c 
+c Define hotspot region
+c
+REGION 1 HsEndZone 1 HsDensity HsT
+MATERIAL 1 1. 2. 1
+MATERIAL 1 1. 3. 1
+c
+c Define barrier region
+c
+REGION HsEndZone+1 BendZone 2 BDensity BT
+MATERIAL 2 6. 12. 1
+c
+c Define Cold fuel (Cf) @ T= 200 eV
+c
+REGION BendZone+1 totalZones 3 CfDensity CfT
+MATERIAL 3 1. 2. 1
+MATERIAL 3 1. 3. 1
+c
+c Define opacity groups
+c
+GROUP 1 50 0.001 2000
+c
+c Define TN groups
+c
+c
+c Use DT eos for Hs and Cf
+c Use Iron eos for barrier
+c 
+EOS 11 1 3
+EOS 181 2
+c
+c Use average-atom, LTE ionization model for all regions
+c
+IONIZ 1 4
+IONIZ 2 4
+IONIZ 3 4
+c
+c Extrapolate EOS linearly for high and low temperatures and densities
+c
+EOSXTRP 1 2 2 2 2
+EOSXTRP 2 2 2 2 2
+EOSXTRP 3 2 2 2 2
+c
+c Turn on Thermonuclear burn in fuel regions
+c
+TNBURN 1 3
+c
+c Add a flux limit to prevent unphysical heatflows
+c For Radiation (65%), ion and electron (DEFAULT 40%),
+c Charged particles (65%)
+c
+PARM FLXLRM .65
+PARM FLXLIM .4
+PARM FLXLEM .4
+c 
+PARM BCPFLXM .65
+c
+c Including ppf file output 
+c
+PPARRAY r rcm rho ti BPEPRD
+PARM postdt .5e-11
+c
+PARM DTMIN 1.e-30
+PARM tstop 5e-10
+PARM itmcyc 10
+PARM NSTOP 10000
+c

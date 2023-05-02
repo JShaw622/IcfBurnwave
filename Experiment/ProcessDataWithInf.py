@@ -78,8 +78,8 @@ def print_criticalRhoR(index,files,error,outputFilename="OUTPUTFILE.csv"):
         print(f+" $\\rho r_{hs}$: "+str(Hs_rhoR[i])+" $\\rho r_{bar}$: "+str(Bar_rhoR[i]))
         i+=1
         
-    df=pd.DataFrame(np.array([Hs_rhoR,xerr,Bar_rhoR,yerr]).T)
-    df.columns=["$\\rho r_{hs}$","$\\delta \\rho r_{hs}$","$T_{hs}$","\\delta T_{hs}"]
+    df=pd.DataFrame(np.array([Hs_rhoR,xerr,Bar_rhoR,yerr,index]).T)
+    df.columns=["$\\rho r_{hs}$","$\\delta \\rho r_{hs}$","$T_{hs}$","\\delta T_{hs}","ignIndex"]
     print(df)
     
     df.to_csv(outputFilename)
@@ -290,6 +290,7 @@ def get_energy_prodRate(filename):
     #total thermonuclear energy production in zone in erg
     productionTN = f.variables["Bpeprd"][:]
     totalTNproduced = sum(productionTN[len(dumpTime)-1])
+    print(totalTNproduced)
     
     ##### Find average energy production per second #####
     productionRate = totalTNproduced/dumpTime[-1]
@@ -313,6 +314,6 @@ def get_Hs_Tion(filename):
     
 #if __name__ == "__main__":
 #    a = sys.argv[1]
-Path = "data/TAnalysis/C/"
-outputName = "C.csv"
+Path = "data/TAnalysis/FeLarge/"
+outputName = "FeLarge.csv"
 main(Path,"inputFiles.txt",outputName)
